@@ -23,6 +23,7 @@ namespace GKS
         private DrawingForm1 df1;
         private ControlsForm2 cf2;
         private ControlsForm3 cf3;
+        private ControlsForm4 cf4;
         private int itemsCount = 0;
         private int[][] outputMatrix;
         private int[][] outputGroups;
@@ -160,9 +161,17 @@ namespace GKS
                     State3();
                     break;
                 case 3:
-                    formState = 1;
-                    cf3.ChangeState();
+                    formState = 4;
+                    cf4 = new ControlsForm4(mainPanel, outputGroupsList);
+                    Dictionary<string, Dictionary<string, int>>[] relationMatrix;
+                    cf4.ClearAndStart(cf3.ChangeState(out relationMatrix), relationMatrix);
                     cf3 = null;
+                    //State4();
+                    break;
+                case 4:
+                    formState = 1;
+                    cf4.ChangeState();
+                    cf4 = null;
                     State1();
                     break;
 

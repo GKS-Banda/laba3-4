@@ -7,29 +7,30 @@ using System.Windows.Forms;
 
 namespace GKS
 {
-    class ControlsForm3
+    class ControlsForm4
     {
         private Panel mainPanel;
+        private RichTextBox newGroupList;
+        private DrawingForm4 df4;
         private Label groupCount;
         private Button arrowRight;
         private Button arrowLeft;
-        private DrawingForm3 df3;
-        private Dictionary<string, Dictionary<string, int>>[] relationMatrix;
-        private string[][] distinctGroups;
+        private string[][][] MGroup;
         private int currentGroup = 1;
 
-        public ControlsForm3(Panel panel)
+        public ControlsForm4(Panel panel, RichTextBox newGroupList)
         {
             mainPanel = panel;
+            this.newGroupList = newGroupList;
         }
 
-        public void ClearAndStart(int[][] groups, string[][] mainArray)
+        public void ClearAndStart(string[][] distinctGroups, Dictionary<string, Dictionary<string, int>>[] relationMatrix)
         {
-            Calculation3 c3 = new Calculation3(groups.Clone() as int[][], mainArray.Clone() as string[][]);
-            c3.StartCalculation(out relationMatrix, out distinctGroups);
+            Calculation4 c4 = new Calculation4(distinctGroups, relationMatrix);
+            c4.StartCalculation(out MGroup);
 
-            df3 = new DrawingForm3();
-            df3.StartDraw(mainPanel, relationMatrix, distinctGroups);
+            df4 = new DrawingForm4();
+            df4.StartDraw(mainPanel);
 
             groupCount = new Label
             {
@@ -74,6 +75,7 @@ namespace GKS
             arrowRight.Click += ArrowRight_Click;
             mainPanel.Controls.Add(arrowRight);
 
+            GroupsOutput();
         }
 
         private void GroupCount_Enter(object sender, EventArgs e)
@@ -83,27 +85,43 @@ namespace GKS
 
         private void ArrowRight_Click(object sender, EventArgs e)
         {
-            if (currentGroup < distinctGroups.Length)
+            if (currentGroup < MGroup.Length)
             {
                 currentGroup++;
-                df3.ChangeGroup(currentGroup, mainPanel);
+                GroupsOutput();
                 groupCount.Text = currentGroup.ToString();
             }
         }
 
         private void ArrowLeft_Click(object sender, EventArgs e)
         {
-            if(currentGroup > 1)
+            if (currentGroup > 1)
             {
                 currentGroup--;
-                df3.ChangeGroup(currentGroup, mainPanel);
+                GroupsOutput();
                 groupCount.Text = currentGroup.ToString();
             }
         }
 
-        public string[][] ChangeState(out Dictionary<string, Dictionary<string, int>>[] relationMatrix)
+        private void GroupsOutput()
         {
-            df3.ChangeFormState(mainPanel);
+            newGroupList.Text = "";
+            for (int i = 0; i < MGroup[currentGroup - 1].Length; i++)
+            {
+                newGroupList.Text += "M " + (i + 1) + ": {";
+                for (int j = 0; j < MGroup[currentGroup - 1][i].Length; j++)
+                {
+                    newGroupList.Text += MGroup[currentGroup - 1][i][j] + ", ";
+                }
+                newGroupList.Text = newGroupList.Text.Substring(0, newGroupList.Text.Length - 2);
+
+                newGroupList.Text += "}\r\n";
+            }
+        }
+
+        public void ChangeState()
+        {
+            df4.ChangeFormState(mainPanel);
             arrowLeft.Click -= ArrowLeft_Click;
             mainPanel.Controls.Remove(arrowLeft);
             arrowRight.Click -= ArrowRight_Click;
@@ -115,10 +133,8 @@ namespace GKS
             arrowRight = null;
             groupCount = null;
             groupCount = null;
-            df3 = null;
-
-            relationMatrix = this.relationMatrix;
-            return distinctGroups;
+            newGroupList = null;
+            df4 = null;
         }
     }
 }

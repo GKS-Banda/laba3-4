@@ -8,3 +8,13 @@ D:\My Projects\Visual Studio\GKS\GKS\obj\Debug\GKS.csproj.CoreCompileInputs.cach
 D:\My Projects\Visual Studio\GKS\GKS\obj\Debug\GKS.exe
 D:\My Projects\Visual Studio\GKS\GKS\obj\Debug\GKS.pdb
 D:\My Projects\Visual Studio\GKS\GKS\obj\Debug\GKS.FormMain.resources
+D:\My Projects\GitHub\Repository\GKS-Banda\laba3-4\GKS\bin\Debug\GKS.exe.config
+D:\My Projects\GitHub\Repository\GKS-Banda\laba3-4\GKS\bin\Debug\GKS.exe
+D:\My Projects\GitHub\Repository\GKS-Banda\laba3-4\GKS\bin\Debug\GKS.pdb
+D:\My Projects\GitHub\Repository\GKS-Banda\laba3-4\GKS\obj\Debug\GKS.csprojAssemblyReference.cache
+D:\My Projects\GitHub\Repository\GKS-Banda\laba3-4\GKS\obj\Debug\GKS.FormMain.resources
+D:\My Projects\GitHub\Repository\GKS-Banda\laba3-4\GKS\obj\Debug\GKS.Properties.Resources.resources
+D:\My Projects\GitHub\Repository\GKS-Banda\laba3-4\GKS\obj\Debug\GKS.csproj.GenerateResource.cache
+D:\My Projects\GitHub\Repository\GKS-Banda\laba3-4\GKS\obj\Debug\GKS.csproj.CoreCompileInputs.cache
+D:\My Projects\GitHub\Repository\GKS-Banda\laba3-4\GKS\obj\Debug\GKS.exe
+D:\My Projects\GitHub\Repository\GKS-Banda\laba3-4\GKS\obj\Debug\GKS.pdb
