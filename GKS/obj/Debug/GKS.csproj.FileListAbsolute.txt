@@ -1,0 +1,10 @@
+D:\My Projects\Visual Studio\GKS\GKS\bin\Debug\GKS.exe.config
+D:\My Projects\Visual Studio\GKS\GKS\bin\Debug\GKS.exe
+D:\My Projects\Visual Studio\GKS\GKS\bin\Debug\GKS.pdb
+D:\My Projects\Visual Studio\GKS\GKS\obj\Debug\GKS.csprojAssemblyReference.cache
+D:\My Projects\Visual Studio\GKS\GKS\obj\Debug\GKS.Properties.Resources.resources
+D:\My Projects\Visual Studio\GKS\GKS\obj\Debug\GKS.csproj.GenerateResource.cache
+D:\My Projects\Visual Studio\GKS\GKS\obj\Debug\GKS.csproj.CoreCompileInputs.cache
+D:\My Projects\Visual Studio\GKS\GKS\obj\Debug\GKS.exe
+D:\My Projects\Visual Studio\GKS\GKS\obj\Debug\GKS.pdb
+D:\My Projects\Visual Studio\GKS\GKS\obj\Debug\GKS.FormMain.resources
