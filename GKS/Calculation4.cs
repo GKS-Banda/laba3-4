@@ -47,11 +47,13 @@ namespace GKS
                 for (int j = 0; j < temp.Count; j++)
                     MGroupTemp[2][j] = temp[j].ToArray();
 
-                for(int k = 0; k < 3; k++)
+
+
+                for(int k = 0; k < MGroupTemp.Length; k++)
                 {
-                    for(int n = k + 1; n < 3; n++)
+                    for(int n = k + 1; n < MGroupTemp.Length; n++)
                     {
-                        for (int l = 0; l < MGroupTemp[k].Length; k++)
+                        for (int l = 0; l < MGroupTemp[k].Length; l++)
                         {
                             for (int m = 0; m < MGroupTemp[k][l].Length; m++)
                             {
@@ -62,6 +64,17 @@ namespace GKS
                                         string[] tempArr = MGroupTemp[n][a].Clone() as string[];
                                         MGroupTemp[n][a] = MGroupTemp[n][a].Concat(MGroupTemp[k][l]).ToArray();
                                         MGroupTemp[k] = MGroupTemp[k].Where((arr, b) => b != l).ToArray();
+                                        if (MGroupTemp[k].Length == 0)
+                                        {
+                                            MGroupTemp = MGroupTemp.Where((arr, b) => b != k).ToArray();
+                                            /*if (n >= MGroupTemp.Length)
+                                                break;*/
+                                            n = 1;
+                                            k = 0;
+                                            l = 0;
+                                            m = 0;
+                                            a = 0;
+                                        }
                                     }
                                 }
                             }
@@ -70,7 +83,12 @@ namespace GKS
                     }
                 }
 
-                MGroup[i] = MGroupTemp[0].Concat(MGroupTemp[1].Concat(MGroupTemp[2]).ToArray()).ToArray();
+                if (MGroupTemp.Length == 3)
+                    MGroup[i] = MGroupTemp[0].Concat(MGroupTemp[1].Concat(MGroupTemp[2]).ToArray()).ToArray();
+                else if (MGroupTemp.Length == 2)
+                    MGroup[i] = MGroupTemp[0].Concat(MGroupTemp[1]).ToArray();
+                else
+                    MGroup[i] = MGroupTemp[0];
             }
         }
 
@@ -200,13 +218,20 @@ namespace GKS
         private int[][][] ThirdOperation()
         {
             int[][][] thirdRelation = new int[distinctGroups.Length][][];
+
             for (int i = 0; i < distinctGroups.Length; i++)
             {
                 thirdRelation[i] = new int[distinctGroups[i].Length][];
                 for (int j = 0; j < distinctGroups[i].Length; j++)
                 {
                     thirdRelation[i][j] = new int[distinctGroups[i].Length];
+                }
+            }
 
+            for (int i = 0; i < distinctGroups.Length; i++)
+            {
+                for (int j = 0; j < distinctGroups[i].Length; j++)
+                {
                     for (int k = 0; k < distinctGroups[i].Length; k++)
                     {
                         if (relationMatrix[i][distinctGroups[i][j]][distinctGroups[i][k]] == 2)
