@@ -165,6 +165,19 @@ namespace GKS
                         if(relationMatrix[i][distinctGroups[i][j]][distinctGroups[i][k]] == 1)
                         {
                             List<string> temp = new List<string>();
+                            temp.Add(distinctGroups[i][k]);
+                            FourthOperationRecursive(j, i, temp);
+                            if(temp.Count >= 3)
+                            {
+                                for(int m = 0; m < temp.Count; m++)
+                                {
+                                    if (m != temp.Count - 1)
+                                    {
+                                        fourthRelation[i][Array.IndexOf(distinctGroups[i], temp[m])][Array.IndexOf(distinctGroups[i], temp[m + 1])] = 1;
+                                        fourthRelation[i][Array.IndexOf(distinctGroups[i], temp[m + 1])][Array.IndexOf(distinctGroups[i], temp[m])] = 1;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -172,24 +185,25 @@ namespace GKS
             return fourthRelation;
         }
 
-        private void FourthOperationRecursive(int i, int j, List<string> positionCheck)
+        private bool FourthOperationRecursive(int row, int groupNumber, List<string> positionCheck)
         {
-            for (int k = 0; k < distinctGroups[i].Length; k++)
+            bool checkAll = false;
+            for(int i = 0; i < distinctGroups[groupNumber].Length; i++)
             {
-                if (relationMatrix[i][distinctGroups[i][j]][distinctGroups[i][k]] == -1)
+                if(relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][row]] == 1)
                 {
-                    if (positionCheck[0] != distinctGroups[i][k])
-                    {
-                        positionCheck.Add(distinctGroups[i][j]);
-                        positionCheck.Add(distinctGroups[i][k]);
-                        FourthOperationRecursive(i, k, positionCheck);
-                    }
-                    else
-                    {
-                        positionCheck.Add(distinctGroups[i][j]);
-                    }
+                    checkAll = true;
+                    if (positionCheck.Contains(distinctGroups[groupNumber][i]))
+                        break;
+                    positionCheck.Add(distinctGroups[groupNumber][row]);
+                    checkAll = FourthOperationRecursive(i, groupNumber, positionCheck);
                 }
             }
+            if(!checkAll)
+            {
+                positionCheck.Remove(distinctGroups[groupNumber][row]);
+            }
+            return checkAll;
         }
 
         private int[][][] FifthOperation()
@@ -209,57 +223,54 @@ namespace GKS
             {
                 for (int j = 0; j < distinctGroups[i].Length; j++)
                 {
-                    for (int k = 0; k < distinctGroups[i].Length; k++)
+                    List<string> temp = new List<string>();
+                    temp.Add(distinctGroups[i][j]);
+                    FindLine(j, i, temp);
+                    if (temp.Count >= 3)
                     {
-                        if (relationMatrix[i][distinctGroups[i][j]][distinctGroups[i][k]] == -1)
+                        for (int l = 0; l < temp.Count - 2; l++)
                         {
-                            List<string> positionCheck = new List<string>();
-                            positionCheck.Add(distinctGroups[i][j]);
-                            FindLine(i, k, positionCheck);
-
-                            for (int l = k; l < distinctGroups[i].Length; l++)
+                            bool checkAll = false;
+                            for (int m = temp.Count - 1; m > 1; m--)
                             {
-                                if (relationMatrix[i][distinctGroups[i][j]][distinctGroups[i][l]] == -1)
+                                if (relationMatrix[i][temp[m]][temp[0]] == 1)
                                 {
-                                    if (positionCheck.Contains(distinctGroups[i][l]))
+                                    checkAll = true;
+                                    for (int p = 0; p < temp.Count; p++)
                                     {
-                                        int indexFound = positionCheck.IndexOf(distinctGroups[i][l]);
-                                        fifthRelation[i][k][j] = 1;
-                                        fifthRelation[i][j][k] = 1;
-                                        for (int m = 0; m < indexFound; m += 2)
+                                        for(int o = 0; o < temp.Count; o++)
                                         {
-                                            if (m != indexFound - 1) //??????
+                                            if(o != p)
                                             {
-                                                fifthRelation[i][Array.IndexOf(distinctGroups[i], positionCheck[m])][Array.IndexOf(distinctGroups[i], positionCheck[m + 1])] = 1;
-                                                fifthRelation[i][Array.IndexOf(distinctGroups[i], positionCheck[m + 1])][Array.IndexOf(distinctGroups[i], positionCheck[m])] = 1;
+                                                fifthRelation[i][Array.IndexOf(distinctGroups[i], temp[p])][Array.IndexOf(distinctGroups[i], temp[o])] = 1;
                                             }
                                         }
                                     }
+                                    break;
                                 }
                             }
+                            if (!checkAll)
+                                temp.RemoveAt(0);
+                            else
+                                break;
                         }
                     }
+                    
                 }
             }
             return fifthRelation;
         }
 
-        private void FindLine(int i, int j, List<string> positionCheck)
+        private void FindLine(int column, int groupNumber, List<string> positionCheck)
         {
-            for (int k = 0; k < distinctGroups[i].Length; k++)
+            for (int i = 0; i < distinctGroups[groupNumber].Length; i++)
             {
-                if (relationMatrix[i][distinctGroups[i][j]][distinctGroups[i][k]] == -1)
+                if (relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][column]] == 1)
                 {
-                    if (positionCheck[0] != distinctGroups[i][k])
-                    {
-                        positionCheck.Add(distinctGroups[i][j]);
-                        positionCheck.Add(distinctGroups[i][k]);
-                        FindLine(i, k, positionCheck);
-                    }
-                    else
-                    {
-                        positionCheck.Add(distinctGroups[i][j]);
-                    }
+                    if (positionCheck.Contains(distinctGroups[groupNumber][i]))
+                        continue;
+                    positionCheck.Add(distinctGroups[groupNumber][i]);
+                    FindLine(i, groupNumber, positionCheck);
                 }
             }
         }
