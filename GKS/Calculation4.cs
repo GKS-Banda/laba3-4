@@ -236,9 +236,9 @@ namespace GKS
                                 if (relationMatrix[i][temp[m]][temp[0]] == 1)
                                 {
                                     checkAll = true;
-                                    for (int p = 0; p < temp.Count; p++)
+                                    for (int p = 0; p <= m; p++)
                                     {
-                                        for(int o = 0; o < temp.Count; o++)
+                                        for(int o = 0; o <= m; o++)
                                         {
                                             if(o != p)
                                             {
