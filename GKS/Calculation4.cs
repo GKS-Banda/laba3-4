@@ -30,190 +30,88 @@ namespace GKS
             MGroup = new string[distinctGroups.Length][][];
             for(int i = 0; i < distinctGroups.Length; i++)
             {
-                string[][][] MGroupTemp = new string[3][][];
-
-                List<List<string>> temp = MatrixForm(first[i], i);
-                MGroupTemp[0] = new string[temp.Count][];
+                List<List<string>> temp = MForm(MatrixGlue(first[i], second[i], third[i]), i);
+                MGroup[i] = new string[temp.Count][];
                 for (int j = 0; j < temp.Count; j++)
-                    MGroupTemp[0][j] = temp[j].ToArray();
-
-                temp = MatrixForm(second[i], i);
-                MGroupTemp[1] = new string[temp.Count][];
-                for (int j = 0; j < temp.Count; j++)
-                    MGroupTemp[1][j] = temp[j].ToArray();
-
-                temp = MatrixForm(third[i], i);
-                MGroupTemp[2] = new string[temp.Count][];
-                for (int j = 0; j < temp.Count; j++)
-                    MGroupTemp[2][j] = temp[j].ToArray();
-
-
-
-                for(int k = 0; k < MGroupTemp.Length; k++)
-                {
-                    for(int n = k + 1; n < MGroupTemp.Length; n++)
-                    {
-                        for (int l = 0; l < MGroupTemp[k].Length; l++)
-                        {
-                            for (int m = 0; m < MGroupTemp[k][l].Length; m++)
-                            {
-                                for (int a = 0; a < MGroupTemp[n].Length; a++)
-                                {
-                                    if (MGroupTemp[n][a].Contains(MGroupTemp[k][l][m]))
-                                    {
-                                        string[] tempArr = MGroupTemp[n][a].Clone() as string[];
-                                        MGroupTemp[n][a] = MGroupTemp[n][a].Concat(MGroupTemp[k][l]).ToArray();
-                                        MGroupTemp[k] = MGroupTemp[k].Where((arr, b) => b != l).ToArray();
-                                        if (MGroupTemp[k].Length == 0)
-                                        {
-                                            MGroupTemp = MGroupTemp.Where((arr, b) => b != k).ToArray();
-                                            /*if (n >= MGroupTemp.Length)
-                                                break;*/
-                                            n = 1;
-                                            k = 0;
-                                            l = 0;
-                                            m = 0;
-                                            a = 0;
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-                }
-
-                if (MGroupTemp.Length == 3)
-                    MGroup[i] = MGroupTemp[0].Concat(MGroupTemp[1].Concat(MGroupTemp[2]).ToArray()).ToArray();
-                else if (MGroupTemp.Length == 2)
-                    MGroup[i] = MGroupTemp[0].Concat(MGroupTemp[1]).ToArray();
-                else
-                    MGroup[i] = MGroupTemp[0];
+                    MGroup[i][j] = temp[j].Distinct().ToArray();
             }
         }
 
-        private List<List<string>> MatrixForm(int[][] matrix, int groupNumber)
+        private int[][] MatrixGlue(int[][] first, int[][] second, int[][] third)
         {
-            int Max = 0;
-            List<List<string>> MGroup = new List<List<string>>();
-            bool[] checkAll = new bool[matrix.Length];
-            do
+            int[][] joinedMatrix = new int[first.Length][];
+            for(int i = 0; i < first.Length; i++)
             {
-                List<string> temp = new List<string>();
-                for (int i = 0; i < matrix.Length; i++)
+                joinedMatrix[i] = new int[first[i].Length];
+                for(int j = 0; j < first[i].Length; j++)
                 {
-                    bool checkZero = false;
-                    for(int j = 0; j < matrix[i].Length; j++)
-                    {
-                        if(matrix[i][j] == 1)
-                        {
-                            temp.Add(distinctGroups[groupNumber][i]);
-                            temp.Add(distinctGroups[groupNumber][j]);
-                            matrix[i][j] = -1;
-                            matrix[j][i] = -1;
-                            checkZero = true;
-                            checkAll[i] = true;
-                            checkAll[j] = true;
-                            i = j;
-                            break;
-                        }
-                    }
-                    if (!checkZero)
-                        break;
+                    if (first[i][j] == 1)
+                        joinedMatrix[i][j] = 1;
+                    else if (second[i][j] == 1)
+                        joinedMatrix[i][j] = 1;
+                    else if (third[i][j] == 1)
+                        joinedMatrix[i][j] = 1;
                 }
-
-                System.Diagnostics.Debug.Write(Max);
-
-                foreach (int[] arr in matrix)
-                    foreach (int m in arr)
-                    {
-                        if (Max < m)
-                            Max = m;
-                    }
-                if (temp.Count > 0)
-                    MGroup.Add(temp);
             }
-            while (Max > 0);
 
-            if(checkAll.Contains(false))
+            foreach(int[] arr in joinedMatrix)
             {
-                for(int i = 0; i < checkAll.Length; i++)
+                foreach (int i in arr)
+                    System.Diagnostics.Debug.Write(i + " ");
+                System.Diagnostics.Debug.WriteLine("");
+            }
+
+            return joinedMatrix;
+        }
+
+        private List<List<string>> MForm(int[][] matrix, int groupNumber)
+        {
+            List<List<string>> temp = new List<List<string>>();
+            for(int i = 0; i < matrix.Length; i++)
+            {
+                List<string> newTemp = CheckCoord(matrix, i, groupNumber);
+                if (newTemp.Count != 0)
+                    temp.Add(newTemp);
+            }
+
+            return temp;
+        }
+
+        private List<string> CheckCoord(int[][]matrix, int row, int groupNumber)
+        {
+            bool containOne = false;
+            List<string> temp = new List<string>();
+            if (matrix[row].Max() == 1)
+            {
+                for (int i = 0; i < matrix[row].Length; i++)
                 {
-                    if(!checkAll[i])
+                    if (matrix[row][i] == 1)
                     {
-                        List<string> temp = new List<string>();
+                        containOne = true;
+                        matrix[row][i] = -1;
+                        matrix[i][row] = -1;
+                        temp.Add(distinctGroups[groupNumber][row]);
                         temp.Add(distinctGroups[groupNumber][i]);
-                        MGroup.Add(temp);
+                        foreach (string s in CheckCoord(matrix, i, groupNumber))
+                            temp.Add(s);
                     }
                 }
             }
+            else if(matrix[row].Max() == 0)
+            {
+                containOne = true;
+                temp.Add(distinctGroups[groupNumber][row]);
+            }
+            if(containOne)
+            {
+                for (int i = 0; i < matrix[row].Length; i++)
+                {
+                    matrix[row][i] = -1;
+                }
+            }
 
-            return MGroup;
+            return temp;
         }
-
-        /*private void RowCalc(int row, int column)
-        {
-            for(int i = 0; i <)
-        }*/
-
-        //-----???????????
-
-        /*private int[][][] FirstOperation()
-        {
-            int[][][] firstRelation = new int[distinctGroups.Length][][];
-            for (int i = 0; i < distinctGroups.Length; i++)
-            {
-                firstRelation[i] = new int[distinctGroups[i].Length][];
-                for (int j = 0; j < distinctGroups[i].Length; j++)
-                {
-                    firstRelation[i][j] = new int[distinctGroups[i].Length];
-                    bool first = true;
-                    
-                    for (int k = 0; k < distinctGroups[i].Length; k++)
-                    {
-                        if (j != distinctGroups[i].Length - 1 && distinctGroups[i][j + 1] == distinctGroups[i][k])
-                        {
-                            relationMatrix[i][distinctGroups[i][j]][distinctGroups[i][k]] = -1;
-                        }
-                        else if (j != 0 && distinctGroups[i][j - 1] == distinctGroups[i][k])
-                        {
-                            relationMatrix[i][distinctGroups[i][j]][distinctGroups[i][k]] = 1;
-                        }
-                    }
-                }
-            }
-        }*/
-
-        /*private int[][][] SecondOperation()
-        {
-            int[][][] secondRelation = new int[distinctGroups.Length][][];
-            for (int i = 0; i < distinctGroups.Length; i++)
-            {
-                secondRelation[i] = new int[distinctGroups[i].Length][];
-                for (int j = 0; j < distinctGroups[i].Length; j++)
-                {
-                    secondRelation[i][j] = new int[distinctGroups[i].Length];
-                    bool second = true;
-
-                    for (int k = 0; k < distinctGroups[i].Length; k++)
-                    {
-                        if (j != k && relationMatrix[i][distinctGroups[i][j]][distinctGroups[i][k]] != 1)
-                            second = false;
-                    }
-
-                    if(second)
-                    {
-                        for (int k = 0; k < distinctGroups[i].Length; k++)
-                        {
-                            secondRelation[i][j][k] = 1;
-                            secondRelation[i][k][j] = 1;
-                        }
-                    }
-                }
-            }
-
-            return secondRelation;
-        }*/
 
         private int[][][] ThirdOperation()
         {
@@ -234,7 +132,7 @@ namespace GKS
                 {
                     for (int k = 0; k < distinctGroups[i].Length; k++)
                     {
-                        if (relationMatrix[i][distinctGroups[i][j]][distinctGroups[i][k]] == 2)
+                        if (relationMatrix[i][distinctGroups[i][j]][distinctGroups[i][k]] == 1 && relationMatrix[i][distinctGroups[i][k]][distinctGroups[i][j]] == 1)
                         {
                             thirdRelation[i][j][k] = 1;
                             thirdRelation[i][k][j] = 1;
@@ -264,24 +162,9 @@ namespace GKS
                 {
                     for (int k = 0; k < distinctGroups[i].Length; k++)
                     {
-                        if (relationMatrix[i][distinctGroups[i][j]][distinctGroups[i][k]] == -1)
+                        if(relationMatrix[i][distinctGroups[i][j]][distinctGroups[i][k]] == 1)
                         {
-                            List<string> positionCheck = new List<string>();
-                            positionCheck.Add(distinctGroups[i][j]);
-                            FourthOperationRecursive(i, k, positionCheck);
-                            if (positionCheck.Contains(distinctGroups[i][j]))
-                            {
-                                fourthRelation[i][k][j] = 1;
-                                fourthRelation[i][j][k] = 1;
-                                for (int l = 0; l < positionCheck.Count; l += 2)
-                                {
-                                    if (l != positionCheck.Count - 1)
-                                    {
-                                        fourthRelation[i][Array.IndexOf(distinctGroups[i], positionCheck[l])][Array.IndexOf(distinctGroups[i], positionCheck[l + 1])] = 1;
-                                        fourthRelation[i][Array.IndexOf(distinctGroups[i], positionCheck[l + 1])][Array.IndexOf(distinctGroups[i], positionCheck[l])] = 1;
-                                    }
-                                }
-                            }
+                            List<string> temp = new List<string>();
                         }
                     }
                 }

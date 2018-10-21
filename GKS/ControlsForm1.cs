@@ -154,17 +154,13 @@ namespace GKS
                     cf2.ClearAndStart(outputGroups, mainArray);
                     break;
                 case 2:
-                    /*formState = 3;
+                    formState = 3;
                     cf3 = new ControlsForm3(mainPanel);
                     cf3.ClearAndStart(cf2.ChangeState(), mainArray);
                     cf2 = null;
-                    State3();*/
-                    formState = 1;
-                    cf2.ChangeState();
-                    cf2 = null;
-                    State1();
+                    State3();
                     break;
-                /*case 3:
+                case 3:
                     formState = 4;
                     cf4 = new ControlsForm4(mainPanel, outputGroupsList);
                     Dictionary<string, Dictionary<string, int>>[] relationMatrix;
@@ -177,7 +173,7 @@ namespace GKS
                     cf4.ChangeState();
                     cf4 = null;
                     State1();
-                    break;*/
+                    break;
 
             }
         }

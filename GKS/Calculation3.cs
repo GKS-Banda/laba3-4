@@ -73,19 +73,9 @@ namespace GKS
                 {
                     for (int k = 0; k < mainArray[group[i][j] - 1].Length; k++)
                     {
-                        if (k != mainArray[group[i][j] - 1].Length - 1)
-                        {
-                            if (relationMatrix[i][mainArray[group[i][j] - 1][k]][mainArray[group[i][j] - 1][k + 1]] == 1)
-                                relationMatrix[i][mainArray[group[i][j] - 1][k]][mainArray[group[i][j] - 1][k + 1]] = 2;
-                            else if(relationMatrix[i][mainArray[group[i][j] - 1][k]][mainArray[group[i][j] - 1][k + 1]] != 2)
-                                relationMatrix[i][mainArray[group[i][j] - 1][k]][mainArray[group[i][j] - 1][k + 1]] = -1;
-                        }
                         if (k != 0)
                         {
-                            if (relationMatrix[i][mainArray[group[i][j] - 1][k]][mainArray[group[i][j] - 1][k - 1]] == -1)
-                                relationMatrix[i][mainArray[group[i][j] - 1][k]][mainArray[group[i][j] - 1][k - 1]] = 2;
-                            else if(relationMatrix[i][mainArray[group[i][j] - 1][k]][mainArray[group[i][j] - 1][k - 1]] != 2)
-                                relationMatrix[i][mainArray[group[i][j] - 1][k]][mainArray[group[i][j] - 1][k - 1]] = 1;
+                            relationMatrix[i][mainArray[group[i][j] - 1][k]][mainArray[group[i][j] - 1][k - 1]] = 1;
                         } 
                     }
                 }
