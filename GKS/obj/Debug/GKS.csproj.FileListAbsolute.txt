@@ -18,3 +18,13 @@ D:\My Projects\GitHub\Repository\GKS-Banda\laba3-4\GKS\obj\Debug\GKS.csproj.Gene
 D:\My Projects\GitHub\Repository\GKS-Banda\laba3-4\GKS\obj\Debug\GKS.csproj.CoreCompileInputs.cache
 D:\My Projects\GitHub\Repository\GKS-Banda\laba3-4\GKS\obj\Debug\GKS.exe
 D:\My Projects\GitHub\Repository\GKS-Banda\laba3-4\GKS\obj\Debug\GKS.pdb
+D:\GKS\Repos\laba3-44\GKS\obj\Debug\GKS.csprojAssemblyReference.cache
+D:\GKS\Repos\laba3-44\GKS\obj\Debug\GKS.FormMain.resources
+D:\GKS\Repos\laba3-44\GKS\obj\Debug\GKS.Properties.Resources.resources
+D:\GKS\Repos\laba3-44\GKS\obj\Debug\GKS.csproj.GenerateResource.cache
+D:\GKS\Repos\laba3-44\GKS\obj\Debug\GKS.csproj.CoreCompileInputs.cache
+D:\GKS\Repos\laba3-44\GKS\obj\Debug\GKS.exe
+D:\GKS\Repos\laba3-44\GKS\obj\Debug\GKS.pdb
+D:\GKS\Repos\laba3-44\GKS\bin\Debug\GKS.exe.config
+D:\GKS\Repos\laba3-44\GKS\bin\Debug\GKS.exe
+D:\GKS\Repos\laba3-44\GKS\bin\Debug\GKS.pdb
