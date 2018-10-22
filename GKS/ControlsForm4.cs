@@ -108,7 +108,7 @@ namespace GKS
             newGroupList.Text = "";
             for (int i = 0; i < MGroup[currentGroup - 1].Length; i++)
             {
-                newGroupList.Text += "M " + (i + 1) + ": {";
+                newGroupList.Text += "M" + (i + 1) + ": {";
                 for (int j = 0; j < MGroup[currentGroup - 1][i].Length; j++)
                 {
                     newGroupList.Text += MGroup[currentGroup - 1][i][j] + ", ";
