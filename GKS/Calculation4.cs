@@ -54,12 +54,12 @@ namespace GKS
                 }
             }
 
-            foreach(int[] arr in joinedMatrix)
+            /*foreach(int[] arr in joinedMatrix)
             {
                 foreach (int i in arr)
                     System.Diagnostics.Debug.Write(i + " ");
                 System.Diagnostics.Debug.WriteLine("");
-            }
+            }*/
 
             return joinedMatrix;
         }
@@ -140,57 +140,25 @@ namespace GKS
                     }
                 }
             }
+
+            foreach (int[][] arr in thirdRelation)
+            {
+                foreach (int[] i in arr)
+                {
+                    foreach (int s in i)
+                        System.Diagnostics.Debug.Write(s + " ");
+                    System.Diagnostics.Debug.WriteLine("");
+                }
+                System.Diagnostics.Debug.WriteLine("");
+                System.Diagnostics.Debug.WriteLine("-------------");
+            }
             return thirdRelation;
         }
 
-        /*private int[][][] FourthOperation()
-        {
-            int[][][] fourthRelation = new int[distinctGroups.Length][][];
-
-            for (int i = 0; i < distinctGroups.Length; i++)
-            {
-                fourthRelation[i] = new int[distinctGroups[i].Length][];
-                for (int j = 0; j < distinctGroups[i].Length; j++)
-                {
-                    fourthRelation[i][j] = new int[distinctGroups[i].Length];
-                }
-            }
-
-            for (int i = 0; i < distinctGroups.Length; i++)
-            {
-                for (int j = 0; j < distinctGroups[i].Length; j++)
-                {
-                    for (int k = 0; k < distinctGroups[i].Length; k++)
-                    {
-                        if(relationMatrix[i][distinctGroups[i][j]][distinctGroups[i][k]] == 1)
-                        {
-                            List<string> temp = new List<string>();
-                            temp.Add(distinctGroups[i][k]);
-                            FourthOperationRecursive(j, i, temp);
-                            if(temp.Count >= 3)
-                            {
-                                for(int m = 0; m < temp.Count; m++)
-                                {
-                                    if (m != temp.Count - 1)
-                                    {
-                                        fourthRelation[i][Array.IndexOf(distinctGroups[i], temp[m])][Array.IndexOf(distinctGroups[i], temp[m + 1])] = 1;
-                                        fourthRelation[i][Array.IndexOf(distinctGroups[i], temp[m + 1])][Array.IndexOf(distinctGroups[i], temp[m])] = 1;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return fourthRelation;
-        }*/
-
-        //ЯРОСЛАВ
         private int[][][] FourthOperation()
         {
-            
-            int outNumber = 0;
             int[][][] fourthRelation = new int[distinctGroups.Length][][];
+
             for (int i = 0; i < distinctGroups.Length; i++)
             {
                 fourthRelation[i] = new int[distinctGroups[i].Length][];
@@ -200,143 +168,65 @@ namespace GKS
                 }
             }
 
-            for (int i = 0; i < distinctGroups.Length; i++) //пробег по группам
+            for (int i = 0; i < distinctGroups.Length; i++)
             {
-                for (int j = 0; j < distinctGroups[i].Length; j++) //пробег по колонкам
+                for (int j = 0; j < distinctGroups[i].Length; j++)
                 {
-                    for (int k = 0; k < distinctGroups[i].Length; k++) //пробег по рядкам
+                    List<string> temp = new List<string>();
+                    temp.Add(distinctGroups[i][j]);
+                    FourthOperationRecursive(j, i, temp);
+                    if(temp.Count >= 3)
                     {
-                        if(relationMatrix[i][distinctGroups[i][k]][distinctGroups[i][j]] == 1) //если 1 в матрице
+                        for(int m = 0; m < temp.Count; m++)
                         {
-                            List<string> temp = new List<string>(); //создаем лист
-                            temp.Add(distinctGroups[i][j]); //добавляем в лист название колонки
-                            List<string> first_column = new List<string>();
-                            first_column.Add(distinctGroups[i][j]);
-                            System.Diagnostics.Debug.Write("Temp_list1: ");
-                            for(int o = 0; o < temp.Count; o++) {
-                            System.Diagnostics.Debug.Write(temp[o] + " ");
-                            }
-                            FourthOperationRecursive(k, i, temp, first_column); //рекурсивная операция
-                            System.Diagnostics.Debug.Write("Temp_list2: ");
-                            for(int o = 0; o < temp.Count; o++) {
-                            System.Diagnostics.Debug.Write(temp[o] + " ");
-                            }
-                            //unknown
-                            if(temp.Count >= 3)
+                            if (m != temp.Count - 1)
                             {
-                                for(int m = 0; m < temp.Count; m++)
-                                {
-                                    if (m != temp.Count - 1)
-                                    {
-                                        fourthRelation[i][Array.IndexOf(distinctGroups[i], temp[m])][Array.IndexOf(distinctGroups[i], temp[m + 1])] = 1;
-                                        fourthRelation[i][Array.IndexOf(distinctGroups[i], temp[m + 1])][Array.IndexOf(distinctGroups[i], temp[m])] = 1;
-                                    }
-                                }
+                                fourthRelation[i][Array.IndexOf(distinctGroups[i], temp[m])][Array.IndexOf(distinctGroups[i], temp[m + 1])] = 1;
+                                fourthRelation[i][Array.IndexOf(distinctGroups[i], temp[m + 1])][Array.IndexOf(distinctGroups[i], temp[m])] = 1;
                             }
-                            //
-
                         }
                     }
-                }                       
+                }
             }
-
+            foreach (int[][] arr in fourthRelation)
+            {
+                foreach (int[] i in arr)
+                {
+                    foreach (int s in i)
+                        System.Diagnostics.Debug.Write(s + " ");
+                    System.Diagnostics.Debug.WriteLine("");
+                }
+                System.Diagnostics.Debug.WriteLine("");
+                System.Diagnostics.Debug.WriteLine("-------------");
+            }
             return fourthRelation;
         }
 
-        private bool FourthOperationRecursive(int row, int groupNumber, List<string> positionCheck, List<string> first_column)
+        private bool FourthOperationRecursive(int column, int groupNumber, List<string> positionCheck)
         {
-            System.Diagnostics.Debug.WriteLine("Начальная колонка: " + positionCheck[0] + " ");
-            System.Diagnostics.Debug.Write("First_List: ");
-                        for(int o = 0; o < first_column.Count; o++) {
-                        System.Diagnostics.Debug.Write(first_column[o] + " ");
-                        }
-            //bool Good = false;
-            /*if(outGood  == true) {
-                Good = true;
-            }*/
+            bool deleteAll = false;
             bool checkAll = false;
-            bool outGood = false;
-            //string proverka = "";
-            for(int i = 0; i < distinctGroups[groupNumber].Length; i++) //пробег по рядкам групп
+            for (int i = 0; i < distinctGroups[groupNumber].Length; i++)
             {
-                if(relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][row]] == 1) //если 1 в матрице нашего столбца
-                {
-                    checkAll = true;
-                        System.Diagnostics.Debug.WriteLine("Group" + (groupNumber+1) + ": ");
-                        System.Diagnostics.Debug.Write("List: ");
-                        for(int o = 0; o < positionCheck.Count; o++) {
-                        System.Diagnostics.Debug.Write(positionCheck[o] + " ");
-                        }
-
-                    if (first_column.Contains(distinctGroups[groupNumber][i])) //если найденный рядок такой же как и наша первая колонка
-                    {
-                        //proverka = distinctGroups[groupNumber][i];
-                        System.Diagnostics.Debug.WriteLine("Wo" + distinctGroups[groupNumber][i] + " ");
-                        positionCheck.Add(distinctGroups[groupNumber][row]);
-                        System.Diagnostics.Debug.Write(positionCheck[positionCheck.Count-1] + " ");
-                        System.Diagnostics.Debug.WriteLine("Out!");
-                        outGood = true;
-                        //outNum += 2;
-                        break;
-                    }
-                    else
-                        positionCheck.Add(distinctGroups[groupNumber][row]);
-                    if(!positionCheck.Contains(distinctGroups[groupNumber][i])) {
-                        //outNum++;
-                        /*if(outGood == true) {
-                            Good = true;
-                        }*/
-                        FourthOperationRecursive(i, groupNumber, positionCheck, first_column);
-                    }
-                }
-            }
-            /*if(!checkAll)
-            {
-                positionCheck.Remove(distinctGroups[groupNumber][row]);
-            }*/
-            /*if(!first_column.Contains(proverka)) {
-                for(int o = 1; o < positionCheck.Count; o++) {
-                    positionCheck.Remove(distinctGroups[groupNumber][o]);
-                }
-            }*/
-                /*System.Diagnostics.Debug.Write("Out_List: ");
-                 for(int o = 0; o < positionCheck.Count; o++) {
-                    System.Diagnostics.Debug.Write(positionCheck[o] + " ");
-                 }*/
-            
-            /*System.Diagnostics.Debug.WriteLine("OutNumber2: " + outNum + " ");
-            outNum--;
-            if(outNum > 0) {
-                outGood = true;
-            }*/
-            //System.Diagnostics.Debug.WriteLine("Opa! Out: " + outGood);
-            /*if(outGood == false)
-            for(int o = 1; o < positionCheck.Count; o++) {
-                    positionCheck.Remove(distinctGroups[groupNumber][o]);
-                } */
-            return checkAll;
-        }
-
-        /*private bool FourthOperationRecursive(int row, int groupNumber, List<string> positionCheck)
-        {
-            bool checkAll = false;
-            for(int i = 0; i < distinctGroups[groupNumber].Length; i++) //пробег по рядкам групп
-            {
-                if(relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][row]] == 1) //если 1 в матрице нашего столбца
+                if (relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][column]] == 1)
                 {
                     checkAll = true;
                     if (positionCheck.Contains(distinctGroups[groupNumber][i]))
+                    {
+                        if (!positionCheck[0].Equals(distinctGroups[groupNumber][i]))
+                            deleteAll = true;
                         break;
-                    positionCheck.Add(distinctGroups[groupNumber][row]);
-                    checkAll = FourthOperationRecursive(i, groupNumber, positionCheck);
+                    }  
+                    positionCheck.Add(distinctGroups[groupNumber][i]);
+                    deleteAll = FourthOperationRecursive(i, groupNumber, positionCheck);
                 }
             }
-            if(!checkAll)
-            {
-                positionCheck.Remove(distinctGroups[groupNumber][row]);
-            }
-            return checkAll;
-        }*/
+
+            if (deleteAll || !checkAll)
+                positionCheck.Clear();
+
+            return deleteAll || !checkAll;
+        }
 
         private int[][][] FifthOperation()
         {
@@ -353,11 +243,14 @@ namespace GKS
 
             for (int i = 0; i < distinctGroups.Length; i++)
             {
+                List<string> reserve = new List<string>();
                 for (int j = 0; j < distinctGroups[i].Length; j++)
                 {
                     List<string> temp = new List<string>();
                     temp.Add(distinctGroups[i][j]);
                     FindLine(j, i, temp);
+                    foreach (string s in reserve)
+                        relationMatrix[i][s][distinctGroups[i][j]] = 1;
                     if (temp.Count >= 3)
                     {
                         for (int l = 0; l < temp.Count - 2; l++)
@@ -387,9 +280,51 @@ namespace GKS
                                 break;
                         }
                     }
-                    
+                    foreach (string s in reserve)
+                        relationMatrix[i][s][distinctGroups[i][j]] = 0;
+                    bool checkOne = false;
+                    for(int l = 0; l < distinctGroups[i].Length; l++)
+                    {
+                        if (relationMatrix[i][distinctGroups[i][l]][distinctGroups[i][j]] == 1)
+                        {
+                            for (int m = l + 1; m < distinctGroups[i].Length; m++)
+                            {
+                                if (relationMatrix[i][distinctGroups[i][m]][distinctGroups[i][j]] == 1)
+                                {
+                                    relationMatrix[i][distinctGroups[i][l]][distinctGroups[i][j]] = 0;
+                                    reserve.Add(distinctGroups[i][l]);
+                                    checkOne = true;
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    if(checkOne)
+                    {
+                        j--;
+                    }
+                    else
+                    {
+                        foreach(string s in reserve)
+                            relationMatrix[i][s][distinctGroups[i][j]] = 1;
+                        reserve.Clear();
+                    }
                 }
             }
+
+            foreach (int[][] arr in fifthRelation)
+            {
+                foreach (int[] i in arr)
+                {
+                    foreach (int s in i)
+                        System.Diagnostics.Debug.Write(s + " ");
+                    System.Diagnostics.Debug.WriteLine("");
+                }
+                System.Diagnostics.Debug.WriteLine("");
+                System.Diagnostics.Debug.WriteLine("-------------");
+            }
+
             return fifthRelation;
         }
 
@@ -403,6 +338,7 @@ namespace GKS
                         continue;
                     positionCheck.Add(distinctGroups[groupNumber][i]);
                     FindLine(i, groupNumber, positionCheck);
+                    break;
                 }
             }
         }
