@@ -33,9 +33,165 @@ namespace GKS
             for(int i = 0; i < distinctGroups.Length; i++)
             {
                 List<List<string>> temp = MForm(MatrixGlue(first[i], second[i], third[i]), i);
+
+                /*bool more5 = false;
+                foreach(List<string> lst in temp)
+                {
+                    if (lst.Count > 5)
+                        more5 = true;
+                }
+
+                if (more5)
+                    FullGroup(first[i], second[i], third[i]);
+
+                temp = MForm(MatrixGlue(first[i], second[i], third[i]), i);
+
+                more5 = false;
+
+                foreach (List<string> lst in temp)
+                {
+                    if (lst.Count > 5)
+                        more5 = true;
+                }
+
+                if (more5)
+                    temp = FullGroup2(first[i], second[i], third[i], i);*/
+
                 MGroup[i] = new string[temp.Count][];
                 for (int j = 0; j < temp.Count; j++)
                     MGroup[i][j] = temp[j].Distinct().ToArray();
+            }
+        }
+
+        private void FullGroup(int[][] first, int[][] second, int[][] third)
+        {
+            for(int i = 0; i < third.Length; i++)
+            {
+                if (third[i].Count(n => n == 1) > 5)
+                {
+                    for (int j = 0; j < third[i].Length; j++)
+                        third[i][j] = 0;
+                }
+            }
+            for (int i = 0; i < second.Length; i++)
+            {
+                if (second[i].Count(n => n == 1) > 5)
+                {
+                    for (int j = 0; j < second[i].Length; j++)
+                        second[i][j] = 0;
+                }
+            }
+        }
+
+        private List<List<string>> FullGroup2(int[][] first, int[][] second, int[][] third, int groupNumber)
+        {
+            int[][] temp = new int[first.Length][];
+            for(int i = 0; i < first.Length; i++)
+            {
+                temp[i] = new int[first[i].Length];
+            }
+
+            List<List<string>> tempLst = MForm(MatrixGlue(first, second, temp), groupNumber);
+            bool more5 = false;
+            foreach (List<string> lst in tempLst)
+            {
+                if (lst.Count > 5)
+                    more5 = true;
+            }
+            if(!more5)
+            {
+                List<List<string>> tempResult = MForm(third.Clone() as int[][], groupNumber);
+                foreach (List<string> lst in tempResult)
+                {
+                    foreach(List<string> lst2 in tempLst)
+                    {
+                        foreach(string s in lst2)
+                        {
+                            if (lst.Contains(s))
+                                lst.Remove(s);
+                        }
+                    }
+                    if (lst.Count == 0)
+                        tempResult.Remove(lst);
+                }
+                if (tempResult.Count != 0)
+                    foreach (List<string> lst in tempResult)
+                        tempLst.Add(lst);
+
+                return tempLst;
+            }
+            else
+            {
+                tempLst = MForm(MatrixGlue(first, temp, third), groupNumber);
+                more5 = false;
+                foreach (List<string> lst in tempLst)
+                {
+                    if (lst.Count > 5)
+                        more5 = true;
+                }
+                if (!more5)
+                {
+                    List<List<string>> tempResult = MForm(second.Clone() as int[][], groupNumber);
+                    foreach (List<string> lst in tempResult)
+                    {
+                        foreach (List<string> lst2 in tempLst)
+                        {
+                            foreach (string s in lst2)
+                            {
+                                if (lst.Contains(s))
+                                    lst.Remove(s);
+                            }
+                        }
+                        if (lst.Count == 0)
+                            tempResult.Remove(lst);
+                    }
+                    if (tempResult.Count != 0)
+                        foreach (List<string> lst in tempResult)
+                            tempLst.Add(lst);
+
+                    return tempLst;
+                }
+                else
+                {
+                    tempLst = MForm(first.Clone() as int[][], groupNumber);
+                    List<List<string>> tempResult = MForm(second.Clone() as int[][], groupNumber);
+                    foreach (List<string> lst in tempResult)
+                    {
+                        foreach (List<string> lst2 in tempLst)
+                        {
+                            foreach (string s in lst2)
+                            {
+                                if (lst.Contains(s))
+                                    lst.Remove(s);
+                            }
+                        }
+                        if (lst.Count == 0)
+                            tempResult.Remove(lst);
+                    }
+                    if (tempResult.Count != 0)
+                        foreach (List<string> lst in tempResult)
+                            tempLst.Add(lst);
+
+                    tempResult = MForm(third.Clone() as int[][], groupNumber);
+                    foreach (List<string> lst in tempResult)
+                    {
+                        foreach (List<string> lst2 in tempLst)
+                        {
+                            foreach (string s in lst2)
+                            {
+                                if (lst.Contains(s))
+                                    lst.Remove(s);
+                            }
+                        }
+                        if (lst.Count == 0)
+                            tempResult.Remove(lst);
+                    }
+                    if (tempResult.Count != 0)
+                        foreach (List<string> lst in tempResult)
+                            tempLst.Add(lst);
+
+                    return tempLst;
+                }
             }
         }
 
@@ -442,6 +598,26 @@ namespace GKS
                     if (positionCheck.Contains(distinctGroups[groupNumber][i]))
                         continue;
                     positionCheck.Add(distinctGroups[groupNumber][i]);
+
+                    bool exit = false;
+
+                    for (int j = i + 1; j < distinctGroups[groupNumber].Length; j++)
+                        if (relationMatrix[groupNumber][distinctGroups[groupNumber][j]][distinctGroups[groupNumber][column]] == 1)
+                        {
+                            exit = true;
+                            break;
+                        }
+
+                    for (int j = 0; j < distinctGroups[groupNumber].Length; j++)
+                        if (relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][column]] == 1 && j != column)
+                        {
+                            exit = true;
+                            break;
+                        }
+
+                    if (exit)
+                        break;
+
                     FindLine(i, groupNumber, positionCheck);
                     break;
                 }
