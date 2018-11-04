@@ -14,7 +14,10 @@ namespace GKS
         private string[] mainInput;
         private Button inputSubmit;
         private Button startCalc;
-        private Button nextPage;
+        private Button deleteObj;
+        private Button arrowRight;
+        private Button arrowLeft;
+        private Label labNumber;
         private RichTextBox outputList;
         private RichTextBox outputKno;
         private RichTextBox outputGroupsList;
@@ -24,12 +27,18 @@ namespace GKS
         private ControlsForm2 cf2;
         private ControlsForm3 cf3;
         private ControlsForm4 cf4;
-        private int itemsCount = 0;
+        private ControlsForm5 cf5;
+        private Dictionary<string, Dictionary<string, int>>[] relationMatrix;
         private int[][] outputMatrix;
         private int[][] outputGroups;
+        private int[][] cf2changeState;
+        private string[][] cf3changeState;
+        private string[][][] cf4changeState;
         private string[][] mainArray;
         private string[] Kno;
         private int formState = 1;
+        private int curentLab = 1;
+        private int labsMade = 5;
 
         public void StartControls(Panel panel)
         {
@@ -69,12 +78,26 @@ namespace GKS
                 Font = new System.Drawing.Font("Times New Roman", 22, System.Drawing.FontStyle.Regular),
                 ForeColor = System.Drawing.ColorTranslator.FromHtml("#C4DFE6"),
                 BackColor = System.Drawing.ColorTranslator.FromHtml("#66A5AD"),
-                Size = new System.Drawing.Size(panel.Width / 4, 6 * panel.Height / 10),
+                Size = new System.Drawing.Size(panel.Width / 4, 5 * panel.Height / 10),
                 BorderStyle = BorderStyle.None,
                 ReadOnly = true
             };
             outputList.Enter += OutputList_Enter;
             panel.Controls.Add(outputList);
+
+            deleteObj = new Button
+            {
+                Location = new System.Drawing.Point(0, 8 * panel.Height / 10),
+                Font = new System.Drawing.Font("Times New Roman", 24, System.Drawing.FontStyle.Regular),
+                ForeColor = System.Drawing.ColorTranslator.FromHtml("#C4DFE6"),
+                BackColor = System.Drawing.ColorTranslator.FromHtml("#003B46"),
+                Size = new System.Drawing.Size(panel.Width / 4, panel.Height / 10),
+                FlatStyle = FlatStyle.Flat,
+                Text = "Delete Last Object"
+            };
+            deleteObj.FlatAppearance.BorderSize = 0;
+            deleteObj.Click += DeleteObj_Click;
+            panel.Controls.Add(deleteObj);
 
             startCalc = new Button
             {
@@ -128,53 +151,164 @@ namespace GKS
             groupName.Enter += OutputList_Enter;
             panel.Controls.Add(groupName);
 
-            nextPage = new Button
+            arrowLeft = new Button
             {
                 Location = new System.Drawing.Point(0, 0),
                 Font = new System.Drawing.Font("Times New Roman", 24, System.Drawing.FontStyle.Regular),
                 ForeColor = System.Drawing.ColorTranslator.FromHtml("#C4DFE6"),
                 BackColor = System.Drawing.ColorTranslator.FromHtml("#07575B"),
-                Size = new System.Drawing.Size(panel.Width / 4, panel.Height / 10),
+                Size = new System.Drawing.Size(panel.Width / 16, panel.Height / 10),
                 FlatStyle = FlatStyle.Flat,
-                Text = "Next Page"
+                Text = "←"
             };
-            nextPage.FlatAppearance.BorderSize = 0;
-            nextPage.Click += NextPage_Click;
-            panel.Controls.Add(nextPage);
+            arrowLeft.FlatAppearance.BorderSize = 0;
+            arrowLeft.Click += ArrowLeft_Click;
+            arrowLeft.Click += NextPage_Click;
+            panel.Controls.Add(arrowLeft);
+
+            arrowRight = new Button
+            {
+                Location = new System.Drawing.Point(3 * mainPanel.Width / 16, 0),
+                Font = new System.Drawing.Font("Times New Roman", 24, System.Drawing.FontStyle.Regular),
+                ForeColor = System.Drawing.ColorTranslator.FromHtml("#C4DFE6"),
+                BackColor = System.Drawing.ColorTranslator.FromHtml("#07575B"),
+                Size = new System.Drawing.Size(panel.Width / 16, panel.Height / 10),
+                FlatStyle = FlatStyle.Flat,
+                Text = "→"
+            };
+            arrowRight.FlatAppearance.BorderSize = 0;
+            arrowRight.Click += ArrowRight_Click;
+            arrowRight.Click += NextPage_Click;
+            panel.Controls.Add(arrowRight);
+
+            labNumber = new Label
+            {
+                Location = new System.Drawing.Point(mainPanel.Width / 16, 0),
+                Font = new System.Drawing.Font("Times New Roman", 24, System.Drawing.FontStyle.Regular),
+                ForeColor = System.Drawing.ColorTranslator.FromHtml("#C4DFE6"),
+                BackColor = System.Drawing.ColorTranslator.FromHtml("#07575B"),
+                Size = new System.Drawing.Size(mainPanel.Width / 8, mainPanel.Height / 10),
+                BorderStyle = BorderStyle.None
+            };
+            labNumber.Enter += LabNumber_Enter;
+            panel.Controls.Add(labNumber);
+
+            labNumber.Text = "Lab " + curentLab;
+            labNumber.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        }
+
+        private void LabNumber_Enter(object sender, EventArgs e)
+        {
+            mainPanel.Focus();
+        }
+
+        private void ArrowRight_Click(object sender, EventArgs e)
+        {
+            if (curentLab < labsMade)
+            {
+                curentLab++;
+                labNumber.Text = "Lab " + curentLab;
+            }
+        }
+
+        private void ArrowLeft_Click(object sender, EventArgs e)
+        {
+            if (curentLab > 1)
+            {
+                curentLab--;
+                labNumber.Text = "Lab " + curentLab;
+            }
+        }
+
+        private void DeleteObj_Click(object sender, EventArgs e)
+        {
+            if (inputList.Count > 1)
+            {
+                inputList.RemoveAt(inputList.Count - 1);
+                outputList.Text = "";
+                int i = 1;
+                foreach (string s in inputList)
+                {
+                    outputList.Text += i +"." + s + "\r\n";
+                    i++;
+                }
+            }
+            else if(inputList.Count == 1)
+            {
+                outputList.Text = "";
+                inputList.Clear();
+            }
+
+            labInput.Focus();
+
+            outputList.SelectionStart = outputList.Text.Length;
+            outputList.ScrollToCaret();
         }
 
         private void NextPage_Click(object sender, EventArgs e)
         {
-            switch (formState)
+            switch (curentLab)
             {
                 case 1:
-                    formState = 2;
-                    State2();
-                    cf2 = new ControlsForm2(mainPanel, outputGroupsList);
-                    cf2.ClearAndStart(outputGroups, mainArray);
+                    cf2changeState = cf2.ChangeState();
+                    cf2 = null;
+                    State1();
+                    formState = 1;
                     break;
                 case 2:
-                    formState = 3;
-                    cf3 = new ControlsForm3(mainPanel);
-                    cf3.ClearAndStart(cf2.ChangeState(), mainArray);
-                    cf2 = null;
-                    State3();
+                    if (formState == 3)
+                    {
+                        cf3.ChangeState();
+                        cf3 = null;
+                    }
+                    cf2 = new ControlsForm2(mainPanel, outputGroupsList);
+                    cf2.ClearAndStart(outputGroups, mainArray);
+                    State2();
+                    formState = 2;
                     break;
                 case 3:
-                    formState = 4;
-                    cf4 = new ControlsForm4(mainPanel, outputGroupsList);
-                    Dictionary<string, Dictionary<string, int>>[] relationMatrix;
-                    cf4.ClearAndStart(cf3.ChangeState(out relationMatrix), relationMatrix);
-                    cf3 = null;
-                    //State4();
+                    if (formState == 2)
+                    {
+                        cf2changeState = cf2.ChangeState();
+                        cf2 = null;
+                    }
+                    else
+                    {
+                        cf4.ChangeState();
+                        cf4 = null;
+                    }
+                    cf3 = new ControlsForm3(mainPanel);
+                    cf3.ClearAndStart(cf2changeState, mainArray);
+                    State3();
+                    formState = 3;
                     break;
                 case 4:
-                    formState = 1;
-                    cf4.ChangeState();
-                    cf4 = null;
-                    State1();
-                    break;
 
+                    cf4 = new ControlsForm4(mainPanel, outputGroupsList);
+                    if (formState == 3)
+                    {
+                        cf3changeState = cf3.ChangeState(out relationMatrix);
+                        cf3 = null;
+                    }
+                    else
+                    {
+                        cf5.ChangeState();
+                        cf5 = null;
+                    }
+                    cf4.ClearAndStart(cf3changeState, relationMatrix);
+                    //State4();
+                    formState = 4;
+                    break;
+                case 5:
+                    cf5 = new ControlsForm5(mainPanel, outputGroupsList);
+                    if (formState == 4)
+                    {
+                        cf4.ChangeState(out cf4changeState);
+                        cf4 = null;
+                    }
+                    cf5.ClearAndStart(cf4changeState);
+                    formState = 5;
+                    break;
             }
         }
 
@@ -193,17 +327,19 @@ namespace GKS
         {
             if (labInput.Text != "")
             {
-                itemsCount++;
-                outputList.Text += itemsCount + "." + labInput.Text + "\r\n";
                 inputList.Add(labInput.Text);
+                outputList.Text += inputList.Count + "." + labInput.Text + "\r\n";
                 labInput.Text = "";
-                if (itemsCount == 14)
+                if (inputList.Count == 14)
                 {
                     labInput.ReadOnly = true;
                     outputList.Text += "Maximum amount of objects reached";
                 }
             }
             labInput.Focus();
+
+            outputList.SelectionStart = outputList.Text.Length;
+            outputList.ScrollToCaret();
         }
 
         private void StartCalc_Click(object sender, EventArgs e)
@@ -260,6 +396,8 @@ namespace GKS
             groupName.Text = "New Groups";
             startCalc.Enabled = false;
             startCalc.Visible = false;
+            deleteObj.Enabled = false;
+            deleteObj.Visible = false;
             inputSubmit.Enabled = false;
             inputSubmit.Visible = false;
             outputKno.Enabled = false;
@@ -273,6 +411,8 @@ namespace GKS
             groupName.Text = "Groups";
             startCalc.Enabled = true;
             startCalc.Visible = true;
+            deleteObj.Enabled = true;
+            deleteObj.Visible = true;
             inputSubmit.Enabled = true;
             inputSubmit.Visible = true;
             outputKno.Enabled = true;

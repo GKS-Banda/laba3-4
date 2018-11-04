@@ -49,14 +49,17 @@
     <Compile Include="Calculation2.cs" />
     <Compile Include="Calculation3.cs" />
     <Compile Include="Calculation4.cs" />
+    <Compile Include="Calculation5.cs" />
     <Compile Include="ControlsForm1.cs" />
     <Compile Include="ControlsForm2.cs" />
     <Compile Include="ControlsForm3.cs" />
     <Compile Include="ControlsForm4.cs" />
+    <Compile Include="ControlsForm5.cs" />
     <Compile Include="DrawingForm1.cs" />
     <Compile Include="DrawingForm2.cs" />
     <Compile Include="DrawingForm3.cs" />
     <Compile Include="DrawingForm4.cs" />
+    <Compile Include="DrawingForm5.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>

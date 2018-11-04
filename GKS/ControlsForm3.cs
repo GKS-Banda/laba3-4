@@ -120,5 +120,22 @@ namespace GKS
             relationMatrix = this.relationMatrix;
             return distinctGroups;
         }
+
+        public void ChangeState()
+        {
+            df3.ChangeFormState(mainPanel);
+            arrowLeft.Click -= ArrowLeft_Click;
+            mainPanel.Controls.Remove(arrowLeft);
+            arrowRight.Click -= ArrowRight_Click;
+            mainPanel.Controls.Remove(arrowRight);
+            groupCount.Enter -= GroupCount_Enter;
+            mainPanel.Controls.Remove(groupCount);
+            mainPanel = null;
+            arrowLeft = null;
+            arrowRight = null;
+            groupCount = null;
+            groupCount = null;
+            df3 = null;
+        }
     }
 }

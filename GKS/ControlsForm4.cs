@@ -136,5 +136,26 @@ namespace GKS
             newGroupList = null;
             df4 = null;
         }
+
+        public void ChangeState(out string[][][] MGroup)
+        {
+            df4.ChangeFormState(mainPanel);
+            arrowLeft.Click -= ArrowLeft_Click;
+            mainPanel.Controls.Remove(arrowLeft);
+            arrowRight.Click -= ArrowRight_Click;
+            mainPanel.Controls.Remove(arrowRight);
+            groupCount.Enter -= GroupCount_Enter;
+            mainPanel.Controls.Remove(groupCount);
+            mainPanel = null;
+            arrowLeft = null;
+            arrowRight = null;
+            groupCount = null;
+            groupCount = null;
+            newGroupList = null;
+            df4 = null;
+
+            MGroup = this.MGroup;
+        }
+
     }
 }
