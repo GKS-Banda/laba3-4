@@ -28,17 +28,19 @@ namespace GKS
         private ControlsForm3 cf3;
         private ControlsForm4 cf4;
         private ControlsForm5 cf5;
+        private ControlsForm6 cf6;
         private Dictionary<string, Dictionary<string, int>>[] relationMatrix;
         private int[][] outputMatrix;
         private int[][] outputGroups;
         private int[][] cf2changeState;
         private string[][] cf3changeState;
         private string[][][] cf4changeState;
+        private string[][] cf5changeState;
         private string[][] mainArray;
         private string[] Kno;
         private int formState = 1;
         private int curentLab = 1;
-        private int labsMade = 5;
+        private int labsMade = 6;
 
         public void StartControls(Panel panel)
         {
@@ -306,8 +308,20 @@ namespace GKS
                         cf4.ChangeState(out cf4changeState);
                         cf4 = null;
                     }
+                    else
+                    {
+                        cf6.ChangeState();
+                        cf6 = null;
+                    }
                     cf5.ClearAndStart(cf4changeState);
                     formState = 5;
+                    break;
+                case 6:
+                    cf6 = new ControlsForm6(mainPanel, outputGroupsList);
+                    cf5.ChangeState(out cf5changeState);
+                    cf5 = null;
+                    cf6.ClearAndStart(mainArray, cf5changeState);
+                    formState = 6;
                     break;
             }
         }

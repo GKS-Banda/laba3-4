@@ -8,7 +8,7 @@ namespace GKS
     {
         private Panel mainPanel;
         private RichTextBox newGroupList;
-        private DrawingForm5 df5;
+        private DrawingForm4 df4;
         private string[][] finalGroups;
 
         public ControlsForm5(Panel panel, RichTextBox newGroupList)
@@ -22,8 +22,8 @@ namespace GKS
             Calculation5 c5 = new Calculation5(MGroup);
             c5.StartCalculation(out finalGroups);
 
-            df5 = new DrawingForm5();
-            df5.StartDraw(mainPanel);
+            df4 = new DrawingForm4();
+            df4.StartDraw(mainPanel);
 
             GroupsOutput();
         }
@@ -46,10 +46,20 @@ namespace GKS
 
         public void ChangeState()
         {
-            df5.ChangeFormState(mainPanel);
+            df4.ChangeFormState(mainPanel);
             mainPanel = null;
             newGroupList = null;
-            df5 = null;
+            df4 = null;
+        }
+
+        public void ChangeState(out string[][] finalGroups)
+        {
+            df4.ChangeFormState(mainPanel);
+            mainPanel = null;
+            newGroupList = null;
+            df4 = null;
+
+            finalGroups = this.finalGroups;
         }
     }
 }
