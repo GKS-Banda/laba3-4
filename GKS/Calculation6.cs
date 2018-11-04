@@ -20,8 +20,8 @@ namespace GKS
         public Calculation6(string[][] mainArray, string[][] finalResult)
         {
             this.mainArray = mainArray;
-            //this.finalResult = finalResult;
-            this.finalResult = new string[][] { new string[] { "C3"}, new string[] { "C1" }, new string[] { "T2", "C2" }, new string[] { "T3", "T4" }, new string[] { "T1" } };
+            this.finalResult = finalResult;
+            //this.finalResult = new string[][] { new string[] { "C3"}, new string[] { "C1" }, new string[] { "T2", "C2" }, new string[] { "T3", "T4" }, new string[] { "T1" } };
         }
 
         public void StartCalculation(out List<string[][]> result)
