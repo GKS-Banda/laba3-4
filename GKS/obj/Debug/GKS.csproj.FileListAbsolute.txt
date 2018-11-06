@@ -28,3 +28,13 @@ D:\GKS\Repos\laba3-44\GKS\obj\Debug\GKS.pdb
 D:\GKS\Repos\laba3-44\GKS\bin\Debug\GKS.exe.config
 D:\GKS\Repos\laba3-44\GKS\bin\Debug\GKS.exe
 D:\GKS\Repos\laba3-44\GKS\bin\Debug\GKS.pdb
+D:\GKS\Repos\laba5-6\GKS\bin\Debug\GKS.exe.config
+D:\GKS\Repos\laba5-6\GKS\bin\Debug\GKS.exe
+D:\GKS\Repos\laba5-6\GKS\bin\Debug\GKS.pdb
+D:\GKS\Repos\laba5-6\GKS\obj\Debug\GKS.csprojAssemblyReference.cache
+D:\GKS\Repos\laba5-6\GKS\obj\Debug\GKS.FormMain.resources
+D:\GKS\Repos\laba5-6\GKS\obj\Debug\GKS.Properties.Resources.resources
+D:\GKS\Repos\laba5-6\GKS\obj\Debug\GKS.csproj.GenerateResource.cache
+D:\GKS\Repos\laba5-6\GKS\obj\Debug\GKS.csproj.CoreCompileInputs.cache
+D:\GKS\Repos\laba5-6\GKS\obj\Debug\GKS.exe
+D:\GKS\Repos\laba5-6\GKS\obj\Debug\GKS.pdb

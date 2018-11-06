@@ -24,6 +24,21 @@ namespace GKS
             groupOut = group;
             KnoOutput = Kno;
             mainArray = this.mainArray;
+            /*//КУРСАЧ_Ярослав_Землянко
+            mainArray = new string[] []{ new string[] {"T1", "C2", "T3", "C3", "T4", "F1", "F2"},
+                        new string[] {"T2", "T5", "T4", "F1", "T1", "C2", "T3"},
+                        new string[] {"T5", "T4", "T1", "C2", "T3"},
+                        new string[] {"T5", "T1", "C2", "T3"},
+                        new string[] {"T4", "F1", "F2", "T1", "C2", "T3"},
+                        new string[] {"T5", "C1", "T1", "C2", "T3"},
+                        new string[] {"T1", "C2", "T3", "T5", "T4", "F2"},
+                        new string[] {"T2", "C2", "F2", "T3", "T4", "F1", "P2"},
+                        new string[] {"T3", "T4", "T2", "C2", "F2", "P2"},
+                        new string[] {"T3", "T4", "F3", "C1", "T2", "C2", "F2"},
+                        new string[] {"T4", "T5", "F3", "C1", "T2", "C2", "F2"},
+                        new string[] {"T5", "T2", "C2", "F2", "F3", "T5"},
+                        new string[] {"T5", "T2", "C2", "F2", "F1", "P2"},
+                        new string[] {"T2", "C2", "F2", "P2"}};*/
         }
 
         private void StringConvert(string[] input)
