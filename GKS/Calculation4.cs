@@ -824,6 +824,13 @@ namespace GKS
                                                 break;
                                             }
                                         }
+                                        /*if(distinctGroups[groupNumber][l] == positionCheck[k+1]) {
+                                            if(distinctGroups[groupNumber][l] == positionCheck[k+1]) {
+                                                createList = false;
+                                                System.Diagnostics.Debug.WriteLine("POPA3");
+                                                break;
+                                            }
+                                        }*/
                                         System.Diagnostics.Debug.WriteLine("POPA");
                                         if(distinctGroups[groupNumber][l] == positionCheck[k-1] || distinctGroups[groupNumber][l] == positionCheck[k+1]) 
                                         {
