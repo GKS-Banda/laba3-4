@@ -12,7 +12,7 @@ namespace GKS
         private Dictionary<string, Dictionary<string, int>>[] relationMatrix;
         private string[][][] MGroup;
         private List<List<string>>[] combinations;
-        private bool noOperation = true;
+        private bool noOperation;
         //Yaroslav
         bool outGood = false;
         int count = 0;
@@ -32,6 +32,7 @@ namespace GKS
             CreateCombinations();
             do
             {
+                noOperation = true;
                 ThirdOperation();
                 FourthOperation();
                 FifthOperation();
