@@ -49,6 +49,7 @@
     <Compile Include="Calculation2.cs" />
     <Compile Include="Calculation3.cs" />
     <Compile Include="Calculation4.cs" />
+    <Compile Include="Calculation4Test.cs" />
     <Compile Include="Calculation5.cs" />
     <Compile Include="Calculation6.cs" />
     <Compile Include="ControlsForm1.cs" />
