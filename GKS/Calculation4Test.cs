@@ -11,10 +11,12 @@ namespace GKS
         private string[][] distinctGroups;
         private Dictionary<string, Dictionary<string, int>>[] relationMatrix;
         private string[][][] MGroup;
+        private List<List<string>>[] combinations;
+        private bool noOperation = true;
         //Yaroslav
         bool outGood = false;
 
-        public Calculation4(string[][] distinctGroups, Dictionary<string, Dictionary<string, int>>[] relationMatrix)
+        public Calculation4Test(string[][] distinctGroups, Dictionary<string, Dictionary<string, int>>[] relationMatrix)
         {
             this.distinctGroups = distinctGroups;
             this.relationMatrix = relationMatrix;
@@ -22,267 +24,58 @@ namespace GKS
 
         public void StartCalculation(out string[][][] MGroup)
         {
-            GroupForm(ThirdOperation(), FourthOperation(), FifthOperation());
+            //GroupForm(ThirdOperation(), FourthOperation(), FifthOperation());
+
+            CreateCombinations();
+            do
+            {
+                ThirdOperation();
+                FourthOperation();
+                FifthOperation();
+            }
+            while (!noOperation);
+
+            TransformList();
 
             MGroup = this.MGroup;
         }
 
-        private void GroupForm(int[][][] first, int[][][] second, int[][][] third)
+        private void CreateCombinations()
+        {
+            combinations = new List<List<string>>[distinctGroups.Length];
+            for(int i = 0; i < distinctGroups.Length; i++)
+            {
+                combinations[i] = new List<List<string>>();
+                
+                foreach(string s in distinctGroups[i])
+                {
+                    List<string> temp = new List<string>();
+                    temp.Add(s);
+                    combinations[i].Add(temp);
+                }
+                
+            }
+        }
+
+        private void TransformList()
         {
             MGroup = new string[distinctGroups.Length][][];
-            for (int i = 0; i < distinctGroups.Length; i++)
+            for(int i = 0; i < distinctGroups.Length; i++)
             {
-                List<List<string>> temp = MForm(MatrixGlue(first[i], second[i], third[i]), i);
-
-                /*bool more5 = false;
-                foreach(List<string> lst in temp)
+                MGroup[i] = new string[combinations[i].Count][];
+                for(int j = 0; j < combinations[i].Count; j++)
                 {
-                    if (lst.Count > 5)
-                        more5 = true;
-                }
-
-                if (more5)
-                    FullGroup(first[i], second[i], third[i]);
-
-                temp = MForm(MatrixGlue(first[i], second[i], third[i]), i);
-
-                more5 = false;
-
-                foreach (List<string> lst in temp)
-                {
-                    if (lst.Count > 5)
-                        more5 = true;
-                }
-
-                if (more5)
-                    temp = FullGroup2(first[i], second[i], third[i], i);*/
-
-                MGroup[i] = new string[temp.Count][];
-                for (int j = 0; j < temp.Count; j++)
-                    MGroup[i][j] = temp[j].Distinct().ToArray();
-            }
-        }
-
-        private void FullGroup(int[][] first, int[][] second, int[][] third)
-        {
-            for (int i = 0; i < third.Length; i++)
-            {
-                if (third[i].Count(n => n == 1) > 5)
-                {
-                    for (int j = 0; j < third[i].Length; j++)
-                        third[i][j] = 0;
-                }
-            }
-            for (int i = 0; i < second.Length; i++)
-            {
-                if (second[i].Count(n => n == 1) > 5)
-                {
-                    for (int j = 0; j < second[i].Length; j++)
-                        second[i][j] = 0;
-                }
-            }
-        }
-
-        private List<List<string>> FullGroup2(int[][] first, int[][] second, int[][] third, int groupNumber)
-        {
-            int[][] temp = new int[first.Length][];
-            for (int i = 0; i < first.Length; i++)
-            {
-                temp[i] = new int[first[i].Length];
-            }
-
-            List<List<string>> tempLst = MForm(MatrixGlue(first, second, temp), groupNumber);
-            bool more5 = false;
-            foreach (List<string> lst in tempLst)
-            {
-                if (lst.Count > 5)
-                    more5 = true;
-            }
-            if (!more5)
-            {
-                List<List<string>> tempResult = MForm(third.Clone() as int[][], groupNumber);
-                foreach (List<string> lst in tempResult)
-                {
-                    foreach (List<string> lst2 in tempLst)
+                    MGroup[i][j] = new string[combinations[i][j].Count];
+                    for(int k = 0; k < combinations[i][j].Count; k++)
                     {
-                        foreach (string s in lst2)
-                        {
-                            if (lst.Contains(s))
-                                lst.Remove(s);
-                        }
-                    }
-                    if (lst.Count == 0)
-                        tempResult.Remove(lst);
-                }
-                if (tempResult.Count != 0)
-                    foreach (List<string> lst in tempResult)
-                        tempLst.Add(lst);
-
-                return tempLst;
-            }
-            else
-            {
-                tempLst = MForm(MatrixGlue(first, temp, third), groupNumber);
-                more5 = false;
-                foreach (List<string> lst in tempLst)
-                {
-                    if (lst.Count > 5)
-                        more5 = true;
-                }
-                if (!more5)
-                {
-                    List<List<string>> tempResult = MForm(second.Clone() as int[][], groupNumber);
-                    foreach (List<string> lst in tempResult)
-                    {
-                        foreach (List<string> lst2 in tempLst)
-                        {
-                            foreach (string s in lst2)
-                            {
-                                if (lst.Contains(s))
-                                    lst.Remove(s);
-                            }
-                        }
-                        if (lst.Count == 0)
-                            tempResult.Remove(lst);
-                    }
-                    if (tempResult.Count != 0)
-                        foreach (List<string> lst in tempResult)
-                            tempLst.Add(lst);
-
-                    return tempLst;
-                }
-                else
-                {
-                    tempLst = MForm(first.Clone() as int[][], groupNumber);
-                    List<List<string>> tempResult = MForm(second.Clone() as int[][], groupNumber);
-                    foreach (List<string> lst in tempResult)
-                    {
-                        foreach (List<string> lst2 in tempLst)
-                        {
-                            foreach (string s in lst2)
-                            {
-                                if (lst.Contains(s))
-                                    lst.Remove(s);
-                            }
-                        }
-                        if (lst.Count == 0)
-                            tempResult.Remove(lst);
-                    }
-                    if (tempResult.Count != 0)
-                        foreach (List<string> lst in tempResult)
-                            tempLst.Add(lst);
-
-                    tempResult = MForm(third.Clone() as int[][], groupNumber);
-                    foreach (List<string> lst in tempResult)
-                    {
-                        foreach (List<string> lst2 in tempLst)
-                        {
-                            foreach (string s in lst2)
-                            {
-                                if (lst.Contains(s))
-                                    lst.Remove(s);
-                            }
-                        }
-                        if (lst.Count == 0)
-                            tempResult.Remove(lst);
-                    }
-                    if (tempResult.Count != 0)
-                        foreach (List<string> lst in tempResult)
-                            tempLst.Add(lst);
-
-                    return tempLst;
-                }
-            }
-        }
-
-        private int[][] MatrixGlue(int[][] first, int[][] second, int[][] third)
-        {
-            int[][] joinedMatrix = new int[first.Length][];
-            for (int i = 0; i < first.Length; i++)
-            {
-                joinedMatrix[i] = new int[first[i].Length];
-                for (int j = 0; j < first[i].Length; j++)
-                {
-                    if (first[i][j] == 1)
-                        joinedMatrix[i][j] = 1;
-                    else if (second[i][j] == 1)
-                        joinedMatrix[i][j] = 1;
-                    else if (third[i][j] == 1)
-                        joinedMatrix[i][j] = 1;
-                }
-            }
-
-            /*foreach(int[] arr in joinedMatrix)
-            {
-                foreach (int i in arr)
-                    System.Diagnostics.Debug.Write(i + " ");
-                System.Diagnostics.Debug.WriteLine("");
-            }*/
-
-            return joinedMatrix;
-        }
-
-        private List<List<string>> MForm(int[][] matrix, int groupNumber)
-        {
-            List<List<string>> temp = new List<List<string>>();
-            for (int i = 0; i < matrix.Length; i++)
-            {
-                List<string> newTemp = CheckCoord(matrix, i, groupNumber);
-                if (newTemp.Count != 0)
-                    temp.Add(newTemp);
-            }
-
-            return temp;
-        }
-
-        private List<string> CheckCoord(int[][] matrix, int row, int groupNumber)
-        {
-            bool containOne = false;
-            List<string> temp = new List<string>();
-            if (matrix[row].Max() == 1)
-            {
-                for (int i = 0; i < matrix[row].Length; i++)
-                {
-                    if (matrix[row][i] == 1)
-                    {
-                        containOne = true;
-                        matrix[row][i] = -1;
-                        matrix[i][row] = -1;
-                        temp.Add(distinctGroups[groupNumber][row]);
-                        temp.Add(distinctGroups[groupNumber][i]);
-                        foreach (string s in CheckCoord(matrix, i, groupNumber))
-                            temp.Add(s);
+                        MGroup[i][j][k] = combinations[i][j][k];
                     }
                 }
             }
-            else if (matrix[row].Max() == 0)
-            {
-                containOne = true;
-                temp.Add(distinctGroups[groupNumber][row]);
-            }
-            if (containOne)
-            {
-                for (int i = 0; i < matrix[row].Length; i++)
-                {
-                    matrix[row][i] = -1;
-                }
-            }
-
-            return temp;
         }
 
-        private int[][][] ThirdOperation()
+        private void ThirdOperation()
         {
-            int[][][] thirdRelation = new int[distinctGroups.Length][][];
-
-            for (int i = 0; i < distinctGroups.Length; i++)
-            {
-                thirdRelation[i] = new int[distinctGroups[i].Length][];
-                for (int j = 0; j < distinctGroups[i].Length; j++)
-                {
-                    thirdRelation[i][j] = new int[distinctGroups[i].Length];
-                }
-            }
 
             for (int i = 0; i < distinctGroups.Length; i++)
             {
@@ -292,61 +85,34 @@ namespace GKS
                     {
                         if (relationMatrix[i][distinctGroups[i][j]][distinctGroups[i][k]] == 1 && relationMatrix[i][distinctGroups[i][k]][distinctGroups[i][j]] == 1)
                         {
-                            thirdRelation[i][j][k] = 1;
-                            thirdRelation[i][k][j] = 1;
-                        }
-                    }
-                }
-            }
-
-            foreach (int[][] arr in thirdRelation)
-            {
-                foreach (int[] i in arr)
-                {
-                    foreach (int s in i)
-                        System.Diagnostics.Debug.Write(s + " ");
-                    System.Diagnostics.Debug.WriteLine("");
-                }
-                System.Diagnostics.Debug.WriteLine("");
-                System.Diagnostics.Debug.WriteLine("-------------");
-            }
-            return thirdRelation;
-        }
-
-        /*private int[][][] FourthOperation()
-        {
-            int[][][] fourthRelation = new int[distinctGroups.Length][][];
-
-            for (int i = 0; i < distinctGroups.Length; i++)
-            {
-                fourthRelation[i] = new int[distinctGroups[i].Length][];
-                for (int j = 0; j < distinctGroups[i].Length; j++)
-                {
-                    fourthRelation[i][j] = new int[distinctGroups[i].Length];
-                }
-            }
-
-            for (int i = 0; i < distinctGroups.Length; i++)
-            {
-                for (int j = 0; j < distinctGroups[i].Length; j++)
-                {
-                    List<string> temp = new List<string>();
-                    temp.Add(distinctGroups[i][j]);
-                    FourthOperationRecursive(j, i, temp);
-                    if(temp.Count >= 3)
-                    {
-                        for(int m = 0; m < temp.Count; m++)
-                        {
-                            if (m != temp.Count - 1)
+                            relationMatrix[i][distinctGroups[i][j]][distinctGroups[i][k]] = 0;
+                            relationMatrix[i][distinctGroups[i][k]][distinctGroups[i][j]] = 0;
+                            for (int m = 0; m < combinations[i].Count; m++)
                             {
-                                fourthRelation[i][Array.IndexOf(distinctGroups[i], temp[m])][Array.IndexOf(distinctGroups[i], temp[m + 1])] = 1;
-                                fourthRelation[i][Array.IndexOf(distinctGroups[i], temp[m + 1])][Array.IndexOf(distinctGroups[i], temp[m])] = 1;
+                                if (combinations[i][m].Contains(distinctGroups[i][j]))
+                                {
+                                    combinations[i][m].Add(distinctGroups[i][k]);
+                                    break;
+                                }
                             }
+                            for (int m = 0; m < combinations[i].Count; m++)
+                            {
+                                if (combinations[i][m].Contains(distinctGroups[i][k]))
+                                {
+                                    combinations[i][m].Remove(distinctGroups[i][k]);
+                                    if (combinations[i][m].Count == 0)
+                                        combinations[i].Remove(combinations[i][m]);
+                                    break;
+                                }
+                            }
+
+                            noOperation = false;
                         }
                     }
                 }
             }
-            foreach (int[][] arr in fourthRelation)
+
+            /*foreach (int[][] arr in thirdRelation)
             {
                 foreach (int[] i in arr)
                 {
@@ -356,50 +122,14 @@ namespace GKS
                 }
                 System.Diagnostics.Debug.WriteLine("");
                 System.Diagnostics.Debug.WriteLine("-------------");
-            }
-            return fourthRelation;
+            }*/
         }
-
-        private bool FourthOperationRecursive(int column, int groupNumber, List<string> positionCheck)
-        {
-            bool deleteAll = false;
-            bool checkAll = false;
-            for (int i = 0; i < distinctGroups[groupNumber].Length; i++)
-            {
-                if (relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][column]] == 1)
-                {
-                    checkAll = true;
-                    if (positionCheck.Contains(distinctGroups[groupNumber][i]))
-                    {
-                        if (!positionCheck[0].Equals(distinctGroups[groupNumber][i]))
-                            deleteAll = true;
-                        break;
-                    }  
-                    positionCheck.Add(distinctGroups[groupNumber][i]);
-                    deleteAll = FourthOperationRecursive(i, groupNumber, positionCheck);
-                }
-            }
-
-            if (deleteAll || !checkAll)
-                positionCheck.Clear();
-
-            return deleteAll || !checkAll;
-        }*/
 
         //ЯРОСЛАВ
-        private int[][][] FourthOperation()
+        private void FourthOperation()
         {
 
             int outNumber = 0;
-            int[][][] fourthRelation = new int[distinctGroups.Length][][];
-            for (int i = 0; i < distinctGroups.Length; i++)
-            {
-                fourthRelation[i] = new int[distinctGroups[i].Length][];
-                for (int j = 0; j < distinctGroups[i].Length; j++)
-                {
-                    fourthRelation[i][j] = new int[distinctGroups[i].Length];
-                }
-            }
 
             for (int i = 0; i < distinctGroups.Length; i++) //пробег по группам
             {
@@ -428,14 +158,33 @@ namespace GKS
                             //unknown
                             if (temp.Count >= 3)
                             {
-                                for (int m = 0; m < temp.Count; m++)
+                                for (int m = 1; m < temp.Count; m++)
                                 {
-                                    if (m != temp.Count - 1)
+                                    
+                                    relationMatrix[i][temp[m]][temp[m - 1]] = 0;
+
+                                    for (int q = 0; q < combinations[i].Count; q++)
                                     {
-                                        fourthRelation[i][Array.IndexOf(distinctGroups[i], temp[m])][Array.IndexOf(distinctGroups[i], temp[m + 1])] = 1;
-                                        fourthRelation[i][Array.IndexOf(distinctGroups[i], temp[m + 1])][Array.IndexOf(distinctGroups[i], temp[m])] = 1;
+                                        if (combinations[i][q].Contains(temp[0]))
+                                        {
+                                            combinations[i][q].Add(temp[m]);
+                                            break;
+                                        }
                                     }
+                                    for (int q = 0; q < combinations[i].Count; q++)
+                                    {
+                                        if (combinations[i][q].Contains(temp[m]))
+                                        {
+                                            combinations[i][q].Remove(temp[m]);
+                                            if (combinations[i][q].Count == 0)
+                                                combinations[i].Remove(combinations[i][q]);
+                                            break;
+                                        }
+                                    }
+                                    
                                 }
+
+                                noOperation = false;
                             }
                             //
 
@@ -443,8 +192,6 @@ namespace GKS
                     }
                 }
             }
-
-            return fourthRelation;
         }
 
         private bool FourthOperationRecursive(int row, int groupNumber, List<string> positionCheck, List<string> first_column)
@@ -494,18 +241,8 @@ namespace GKS
 
 
 
-        private int[][][] FifthOperation()
+        private void FifthOperation()
         {
-            int[][][] fifthRelation = new int[distinctGroups.Length][][];
-
-            for (int i = 0; i < distinctGroups.Length; i++)
-            {
-                fifthRelation[i] = new int[distinctGroups[i].Length][];
-                for (int j = 0; j < distinctGroups[i].Length; j++)
-                {
-                    fifthRelation[i][j] = new int[distinctGroups[i].Length];
-                }
-            }
 
             for (int i = 0; i < distinctGroups.Length; i++)
             {
@@ -526,17 +263,36 @@ namespace GKS
                             {
                                 if (relationMatrix[i][temp[m]][temp[0]] == 1)
                                 {
+                                    relationMatrix[i][temp[m]][temp[0]] = 0;
+
                                     checkAll = true;
-                                    for (int p = 0; p <= m; p++)
+                                    for (int p = 1; p <= m; p++)
                                     {
-                                        for (int o = 0; o <= m; o++)
-                                        {
-                                            if (o != p)
-                                            {
-                                                fifthRelation[i][Array.IndexOf(distinctGroups[i], temp[p])][Array.IndexOf(distinctGroups[i], temp[o])] = 1;
-                                            }
-                                        }
+                                         relationMatrix[i][temp[p]][temp[p - 1]] = 0;
+
+                                         for (int q = 0; q < combinations[i].Count; q++)
+                                         {
+                                             if (combinations[i][q].Contains(temp[0]))
+                                             {
+                                                 combinations[i][q].Add(temp[p]);
+                                                 break;
+                                             }
+                                         }
+                                         for (int q = 0; q < combinations[i].Count; q++)
+                                         {
+                                             if (combinations[i][q].Contains(temp[p]))
+                                             {
+                                                 combinations[i][q].Remove(temp[p]);
+                                                 if (combinations[i][q].Count == 0)
+                                                     combinations[i].Remove(combinations[i][q]);
+                                                 break;
+                                             }
+                                         }
+
                                     }
+
+                                    noOperation = false;
+
                                     break;
                                 }
                             }
@@ -579,7 +335,7 @@ namespace GKS
                 }
             }
 
-            foreach (int[][] arr in fifthRelation)
+            /*foreach (int[][] arr in fifthRelation)
             {
                 foreach (int[] i in arr)
                 {
@@ -589,9 +345,7 @@ namespace GKS
                 }
                 System.Diagnostics.Debug.WriteLine("");
                 System.Diagnostics.Debug.WriteLine("-------------");
-            }
-
-            return fifthRelation;
+            }*/
         }
 
         private void FindLine(int column, int groupNumber, List<string> positionCheck)

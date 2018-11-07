@@ -26,7 +26,7 @@ namespace GKS
 
         public void ClearAndStart(string[][] distinctGroups, Dictionary<string, Dictionary<string, int>>[] relationMatrix)
         {
-            Calculation4 c4 = new Calculation4(distinctGroups, relationMatrix);
+            Calculation4Test c4 = new Calculation4Test(distinctGroups, relationMatrix);
             c4.StartCalculation(out MGroup);
 
             df4 = new DrawingForm4();
