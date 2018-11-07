@@ -36,6 +36,17 @@ namespace GKS
                 ThirdOperation();
                 FourthOperation();
                 FifthOperation();
+
+                foreach(List<List<string>> a in combinations)
+                {
+                    System.Diagnostics.Debug.WriteLine("List:---------------");
+                    foreach(List<string> b in a)
+                    {
+                        System.Diagnostics.Debug.WriteLine("One List:---------------");
+                        foreach(string c in b)
+                            System.Diagnostics.Debug.WriteLine(c);
+                    }
+                }
             }
             while (!noOperation);
 
@@ -95,20 +106,31 @@ namespace GKS
                             {
                                 if (combinations[i][m].Contains(distinctGroups[i][j]))
                                 {
-                                    combinations[i][m].Add(distinctGroups[i][k]);
+                                    for (int q = 0; q < combinations[i].Count; q++)
+                                    {
+                                        if (combinations[i][q].Contains(distinctGroups[i][k]))
+                                        {
+                                            if (combinations[i][q].Count == 1)
+                                            {
+                                                combinations[i][m].Add(distinctGroups[i][k]);
+                                                combinations[i][q].Remove(distinctGroups[i][k]);
+                                                if (combinations[i][q].Count == 0)
+                                                    combinations[i].Remove(combinations[i][q]);
+                                            }
+                                            else if(combinations[i][q].Count > 1)
+                                            {
+                                                foreach (string s in combinations[i][q])
+                                                    combinations[i][m].Add(s);
+                                                combinations[i].Remove(combinations[i][q]);
+                                            }
+                                            break;
+                                        }
+                                    }
+
                                     break;
                                 }
                             }
-                            for (int m = 0; m < combinations[i].Count; m++)
-                            {
-                                if (combinations[i][m].Contains(distinctGroups[i][k]))
-                                {
-                                    combinations[i][m].Remove(distinctGroups[i][k]);
-                                    if (combinations[i][m].Count == 0)
-                                        combinations[i].Remove(combinations[i][m]);
-                                    break;
-                                }
-                            }
+                            
 
                             noOperation = false;
                         }
@@ -172,26 +194,38 @@ namespace GKS
 
                                     relationMatrix[i][temp[m]][temp[m - 1]] = 0;
 
-                                    for (int q = 0; q < combinations[i].Count; q++)
+                                    for (int w = 0; w < combinations[i].Count; w++)
                                     {
-                                        if (combinations[i][q].Contains(temp[0]))
+                                        if (combinations[i][w].Contains(temp[0]))
                                         {
-                                            combinations[i][q].Add(temp[m]);
-                                            break;
-                                        }
-                                    }
-                                    for (int q = 0; q < combinations[i].Count; q++)
-                                    {
-                                        if (combinations[i][q].Contains(temp[m]))
-                                        {
-                                            combinations[i][q].Remove(temp[m]);
-                                            if (combinations[i][q].Count == 0)
-                                                combinations[i].Remove(combinations[i][q]);
+                                            for (int q = 0; q < combinations[i].Count; q++)
+                                            {
+                                                if (combinations[i][q].Contains(temp[m]))
+                                                {
+                                                    if (combinations[i][q].Count == 1)
+                                                    {
+                                                        combinations[i][w].Add(temp[m]);
+                                                        combinations[i][q].Remove(temp[m]);
+                                                        if (combinations[i][q].Count == 0)
+                                                            combinations[i].Remove(combinations[i][q]);
+                                                    }
+                                                    else if (combinations[i][q].Count > 1)
+                                                    {
+                                                        foreach (string s in combinations[i][q])
+                                                            combinations[i][w].Add(s);
+                                                        combinations[i].Remove(combinations[i][q]);
+                                                    }
+                                                    break;
+                                                }
+                                            }
+
                                             break;
                                         }
                                     }
 
                                 }
+
+                                
 
                                 noOperation = false;
                             }
@@ -308,21 +342,31 @@ namespace GKS
                                     {
                                         relationMatrix[i][temp[p]][temp[p - 1]] = 0;
 
-                                        for (int q = 0; q < combinations[i].Count; q++)
+                                        for (int w = 0; w < combinations[i].Count; w++)
                                         {
-                                            if (combinations[i][q].Contains(temp[0]))
+                                            if (combinations[i][w].Contains(temp[0]))
                                             {
-                                                combinations[i][q].Add(temp[p]);
-                                                break;
-                                            }
-                                        }
-                                        for (int q = 0; q < combinations[i].Count; q++)
-                                        {
-                                            if (combinations[i][q].Contains(temp[p]))
-                                            {
-                                                combinations[i][q].Remove(temp[p]);
-                                                if (combinations[i][q].Count == 0)
-                                                    combinations[i].Remove(combinations[i][q]);
+                                                for (int q = 0; q < combinations[i].Count; q++)
+                                                {
+                                                    if (combinations[i][q].Contains(temp[p]))
+                                                    {
+                                                        if (combinations[i][q].Count == 1)
+                                                        {
+                                                            combinations[i][w].Add(temp[p]);
+                                                            combinations[i][q].Remove(temp[p]);
+                                                            if (combinations[i][q].Count == 0)
+                                                                combinations[i].Remove(combinations[i][q]);
+                                                        }
+                                                        else if (combinations[i][q].Count > 1)
+                                                        {
+                                                            foreach (string s in combinations[i][q])
+                                                                combinations[i][w].Add(s);
+                                                            combinations[i].Remove(combinations[i][q]);
+                                                        }
+                                                        break;
+                                                    }
+                                                }
+
                                                 break;
                                             }
                                         }
