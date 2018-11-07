@@ -13,7 +13,9 @@ namespace GKS
         private string[][][] MGroup;
         //Yaroslav
         bool outGood = false;
-
+        int count = 0;
+        int first_column = 0;
+        bool createList = true;
         public Calculation4(string[][] distinctGroups, Dictionary<string, Dictionary<string, int>>[] relationMatrix)
         {
             this.distinctGroups = distinctGroups;
@@ -390,7 +392,7 @@ namespace GKS
         private int[][][] FourthOperation()
         {
             
-            int outNumber = 0;
+            //int outNumber = 0;
             int[][][] fourthRelation = new int[distinctGroups.Length][][];
             for (int i = 0; i < distinctGroups.Length; i++)
             {
@@ -413,16 +415,21 @@ namespace GKS
                             temp.Add(distinctGroups[i][j]); //добавляем в лист название колонки
                             List<string> first_column = new List<string>();
                             first_column.Add(distinctGroups[i][j]);
-                            System.Diagnostics.Debug.Write("Temp_list1: ");
+                            /*System.Diagnostics.Debug.Write("Temp_list1: ");
                             for(int o = 0; o < temp.Count; o++) {
                             System.Diagnostics.Debug.Write(temp[o] + " ");
-                            }
+                            }*/
+                            System.Diagnostics.Debug.WriteLine("НАЧАЛО:");
                             outGood = false;
                             FourthOperationRecursive(k, i, temp, first_column); //рекурсивная операция
-                            System.Diagnostics.Debug.Write("Temp_list2: ");
+                            if(outGood == false) {
+                                temp.Clear();
+                            }
+                            System.Diagnostics.Debug.Write("Out_list: ");
                             for(int o = 0; o < temp.Count; o++) {
                             System.Diagnostics.Debug.Write(temp[o] + " ");
                             }
+                            System.Diagnostics.Debug.WriteLine("");
                             //unknown
                             if(temp.Count >= 3)
                             {
@@ -447,29 +454,37 @@ namespace GKS
 
         private bool FourthOperationRecursive(int row, int groupNumber, List<string> positionCheck, List<string> first_column)
         {
+            int i = 0;
             System.Diagnostics.Debug.WriteLine("Начальная колонка: " + positionCheck[0] + " ");
-            System.Diagnostics.Debug.Write("First_List: ");
-                        for(int o = 0; o < first_column.Count; o++) {
-                        System.Diagnostics.Debug.Write(first_column[o] + " ");
-                        }
-            bool checkAll = false;
-            for(int i = 0; i < distinctGroups[groupNumber].Length; i++) //пробег по рядкам групп
-            {
-                if(relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][row]] == 1) //если 1 в матрице нашего столбца
-                {
-                    checkAll = true;
-                        System.Diagnostics.Debug.WriteLine("Group" + (groupNumber+1) + ": ");
-                        System.Diagnostics.Debug.Write("List: ");
+            System.Diagnostics.Debug.Write("List: ");
                         for(int o = 0; o < positionCheck.Count; o++) {
                         System.Diagnostics.Debug.Write(positionCheck[o] + " ");
                         }
+            System.Diagnostics.Debug.WriteLine("");
+            bool checkAll = false;
+            for(i = 0; i < distinctGroups[groupNumber].Length; i++) //пробег по рядкам групп
+            {
+                System.Diagnostics.Debug.WriteLine("");
+                System.Diagnostics.Debug.Write(distinctGroups[groupNumber][i] + ", " + distinctGroups[groupNumber][row] + ": ");
+                System.Diagnostics.Debug.WriteLine(relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][row]]);
+                if(relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][row]] == 1) //если 1 в матрице нашего столбца
+                {
+                    //checkAll = true;
+                    System.Diagnostics.Debug.WriteLine("Group" + (groupNumber+1) + ": ");
+                    System.Diagnostics.Debug.WriteLine("FIND: " + distinctGroups[groupNumber][row] + " ");
+                    System.Diagnostics.Debug.WriteLine("");
+                        /*System.Diagnostics.Debug.Write("List: ");
+                        for(int o = 0; o < positionCheck.Count; o++) {
+                        System.Diagnostics.Debug.Write(positionCheck[o] + " ");
+                        }*/
                         
                     if (first_column.Contains(distinctGroups[groupNumber][i])) //если найденный рядок такой же как и наша первая колонка
                     {
-                        System.Diagnostics.Debug.WriteLine("Wo" + distinctGroups[groupNumber][i] + " ");
+                        System.Diagnostics.Debug.WriteLine("Wo: " + distinctGroups[groupNumber][i] + " ");
                         positionCheck.Add(distinctGroups[groupNumber][row]);
                         System.Diagnostics.Debug.Write(positionCheck[positionCheck.Count-1] + " ");
                         System.Diagnostics.Debug.WriteLine("Out!");
+                        System.Diagnostics.Debug.WriteLine("");
                         outGood = true;
                         break;
                     }
@@ -481,8 +496,10 @@ namespace GKS
                 }
             }
             System.Diagnostics.Debug.WriteLine("Opa! Out: " + outGood);
-            if(outGood == false)
+            if(outGood == false && i == (distinctGroups[groupNumber].Length-1))
                     positionCheck.Clear();
+            else if(outGood == false && i != (distinctGroups[groupNumber].Length-1))
+                positionCheck.RemoveAt(positionCheck.Count-1);
             return checkAll;
         }
 
@@ -492,7 +509,6 @@ namespace GKS
         private int[][][] FifthOperation()
         {
             int[][][] fifthRelation = new int[distinctGroups.Length][][];
-
             for (int i = 0; i < distinctGroups.Length; i++)
             {
                 fifthRelation[i] = new int[distinctGroups[i].Length][];
@@ -509,7 +525,25 @@ namespace GKS
                 {
                     List<string> temp = new List<string>();
                     temp.Add(distinctGroups[i][j]);
+                    count = 0;
+                    outGood = false;
                     FindLine(j, i, temp);
+                    System.Diagnostics.Debug.WriteLine("Exit:");
+                    for(int o = 0; o < temp.Count; o++) {
+                        System.Diagnostics.Debug.Write(temp[o] + " ");
+                    }
+                    System.Diagnostics.Debug.WriteLine("");
+                    temp = new List<string>(temp.Distinct().ToArray());
+                    CreateList(i, temp);
+                    if(createList == false) 
+                    {
+                        temp.Clear();
+                    }
+                    System.Diagnostics.Debug.WriteLine("New Exit:");
+                    for(int o = 0; o < temp.Count; o++) {
+                        System.Diagnostics.Debug.Write(temp[o] + " ");
+                    }
+                    System.Diagnostics.Debug.WriteLine("");
                     foreach (string s in reserve)
                         relationMatrix[i][s][distinctGroups[i][j]] = 1;
                     if (temp.Count >= 3)
@@ -591,35 +625,244 @@ namespace GKS
 
         private void FindLine(int column, int groupNumber, List<string> positionCheck)
         {
+            /*System.Diagnostics.Debug.WriteLine("Column: " + column + " ");
+            System.Diagnostics.Debug.WriteLine("");
             for (int i = 0; i < distinctGroups[groupNumber].Length; i++)
             {
+                System.Diagnostics.Debug.WriteLine(distinctGroups[groupNumber][i] + " " + distinctGroups[groupNumber][column] + " ");
+                System.Diagnostics.Debug.WriteLine("");
+                count++;
+                bool exit = false;
+                bool proverka = false;
                 if (relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][column]] == 1)
                 {
-                    if (positionCheck.Contains(distinctGroups[groupNumber][i]))
-                        continue;
-                    positionCheck.Add(distinctGroups[groupNumber][i]);
-
-                    bool exit = false;
-
-                    for (int j = i + 1; j < distinctGroups[groupNumber].Length; j++)
-                        if (relationMatrix[groupNumber][distinctGroups[groupNumber][j]][distinctGroups[groupNumber][column]] == 1)
+                    if(count == 1) {
+                        if (relationMatrix[groupNumber][distinctGroups[groupNumber][column]][distinctGroups[groupNumber][i]] == 1)
                         {
                             exit = true;
-                            break;
+                        }
+                        if(!exit) {
+                            for (int j = i + 1; j < distinctGroups[groupNumber].Length; j++)
+                            if (relationMatrix[groupNumber][distinctGroups[groupNumber][j]][distinctGroups[groupNumber][column]] == 1 && positionCheck.Count != 1)
+                            {
+                                proverka = true;
+                            }
+
+                            positionCheck.Add(distinctGroups[groupNumber][i]);
+                        }
+                    }   
+                    /*bool exit = false;
+                    bool relation = false;
+                    if (relationMatrix[groupNumber][distinctGroups[groupNumber][column]][distinctGroups[groupNumber][i]] == 1) {
+                        relation = true;
+                    }
+
+                    for(int j = 0; j < distinctGroups[groupNumber].Length; j++) { 
+                        if(relationMatrix[groupNumber][distinctGroups[groupNumber][j]][distinctGroups[groupNumber][column]] == 1 && !(relationMatrix[groupNumber][distinctGroups[groupNumber][column]][distinctGroups[groupNumber][j]] == 1) && positionCheck.Count != 1) {
+                            exit = true;
+                        }
+                    }
+                    for(int j = 0; j < distinctGroups[groupNumber].Length; j++) { 
+                        if(relationMatrix[groupNumber][distinctGroups[groupNumber][column]][distinctGroups[groupNumber][j]] == 1 && !(relationMatrix[groupNumber][distinctGroups[groupNumber][column]][distinctGroups[groupNumber][j]] == 1) && positionCheck.Count != 1) {
+                            exit = true;
+                        }
+                    }
+                    if(exit)
+                        break;
+                    else
+                        positionCheck.Add(distinctGroups[groupNumber][i]);
+                    /*for (int j = i + 1; j < distinctGroups[groupNumber].Length; j++)
+                        if (relationMatrix[groupNumber][distinctGroups[groupNumber][j]][distinctGroups[groupNumber][column]] == 1 && positionCheck.Count != 1)
+                        {
+                            exit++;
+                            
                         }
 
                     for (int j = 0; j < distinctGroups[groupNumber].Length; j++)
-                        if (relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][column]] == 1 && j != column)
+                        if (relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][column]] == 1 && j != column && positionCheck.Count != 1)
                         {
-                            exit = true;
-                            break;
+                            exit++;
                         }
 
-                    if (exit)
+                    if (positionCheck.Contains(distinctGroups[groupNumber][i]) && exit >= 1 ) {
+                        positionCheck.Add(distinctGroups[groupNumber][i]);
+                        continue;
+                    }
+                    positionCheck.Add(distinctGroups[groupNumber][i]);
+
+                    if (exit != 0)
                         break;
 
-                    FindLine(i, groupNumber, positionCheck);
+
+
+
+                        System.Diagnostics.Debug.WriteLine("List:");
+                    for(int o = 0; o < positionCheck.Count; o++) {
+                            System.Diagnostics.Debug.Write(positionCheck[o] + " ");
+                            }
+                        System.Diagnostics.Debug.WriteLine("");
+                    if(exit == false)
+                        FindLine(i, groupNumber, positionCheck);
                     break;
+                }
+            }*/
+            System.Diagnostics.Debug.WriteLine(distinctGroups[groupNumber][column]);
+            int i = 0;
+            for (i = 0; i < distinctGroups[groupNumber].Length; i++)
+            {
+                if(count == 0)
+                {
+                    first_column = column;
+                    if (relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][column]] == 1)
+                    {
+                        count++;
+                        positionCheck.Add(distinctGroups[groupNumber][i]);
+                        FindLine(i, groupNumber, positionCheck);
+                    }
+                }
+                else if(count == 1) {
+                    if (relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][column]] == 1 && positionCheck.Contains(distinctGroups[groupNumber][i]) == false)
+                    {
+                        count++;
+                        positionCheck.Add(distinctGroups[groupNumber][i]);
+                        if (relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][first_column]] == 1) 
+                        {
+                            outGood = true;
+                            break;
+                        }
+                            FindLine(i, groupNumber, positionCheck);
+                    }
+                }
+                else {
+                    if (relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][column]] == 1 && positionCheck.Contains(distinctGroups[groupNumber][i]) == false)
+                    {
+                        count++;
+                        positionCheck.Add(distinctGroups[groupNumber][i]);
+                        if (relationMatrix[groupNumber][distinctGroups[groupNumber][i]][distinctGroups[groupNumber][first_column]] == 1) 
+                        {
+                            outGood = true;
+                            break;
+                        }
+                            FindLine(i, groupNumber, positionCheck);
+                    }
+                }
+            }
+
+            if(outGood == false && i == (distinctGroups[groupNumber].Length-1))
+            {
+                positionCheck.Clear();
+                count = 0;
+            }
+            else if(outGood == false && i != (distinctGroups[groupNumber].Length-1))
+            {
+                count--;
+                positionCheck.RemoveAt(positionCheck.Count-1);
+            }
+
+            
+            System.Diagnostics.Debug.WriteLine("-----" + outGood + "Count: " + count);
+            for(int o = 0; o < positionCheck.Count; o++) 
+            {
+                System.Diagnostics.Debug.Write(positionCheck[o] + " ");
+            }
+            System.Diagnostics.Debug.WriteLine("------");
+        }
+
+        private void CreateList(int groupNumber, List<string> positionCheck)
+        {
+            createList = true;
+            positionCheck = new List<string>(positionCheck.Distinct().ToArray());
+
+            for (int k = 0; k < positionCheck.Count; k++)
+            {
+                if(createList == false) 
+                {
+                     break;
+                }
+                if(k > 0 && k < positionCheck.Count-1)
+                {
+                    for (int j = 0; j < distinctGroups[groupNumber].Length; j++)
+                    {
+                        if(createList == false) 
+                        {
+                            break;
+                        }
+                        if(distinctGroups[groupNumber][j] == positionCheck[k])
+                        {
+                            for(int l = 0; l < distinctGroups[groupNumber].Length; l++) 
+                            {
+                                if(createList == false) 
+                                {
+                                    break;
+                                }
+                                if(relationMatrix[groupNumber][distinctGroups[groupNumber][l]][distinctGroups[groupNumber][j]] == 1) 
+                                {
+                                    if(distinctGroups[groupNumber][l] == positionCheck[k-1] || distinctGroups[groupNumber][l] == positionCheck[k+1]) 
+                                    {
+                                        createList = true;
+                                        System.Diagnostics.Debug.WriteLine("OPA1");
+                                    }
+                                    else
+                                    {
+                                        createList = false;
+                                        System.Diagnostics.Debug.WriteLine("OPA2");
+                                        break;
+                                    }
+                                }
+                            }
+                            if(createList) 
+                            {
+                                for(int l = 0; l < distinctGroups[groupNumber].Length; l++) 
+                                { 
+                                    if(relationMatrix[groupNumber][distinctGroups[groupNumber][j]][distinctGroups[groupNumber][l]] == 1) 
+                                    {
+                                        System.Diagnostics.Debug.WriteLine("OPA");
+                                        if(positionCheck.Count == 3) {
+                                            if(distinctGroups[groupNumber][l] == positionCheck[k+1]) {
+                                                createList = false;
+                                                System.Diagnostics.Debug.WriteLine("POPA3");
+                                                break;
+                                            }
+                                        }
+                                        /*if(distinctGroups[groupNumber][l] == positionCheck[k+1]) {
+                                            if(distinctGroups[groupNumber][l] == positionCheck[k+1]) {
+                                                createList = false;
+                                                System.Diagnostics.Debug.WriteLine("POPA3");
+                                                break;
+                                            }
+                                        }*/
+                                        System.Diagnostics.Debug.WriteLine("POPA");
+                                        if(distinctGroups[groupNumber][l] == positionCheck[k-1] || distinctGroups[groupNumber][l] == positionCheck[k+1]) 
+                                        {
+                                            createList = true;
+                                            System.Diagnostics.Debug.WriteLine("POPA1");
+                                        }
+                                        else
+                                        {
+                                            createList = false;
+                                            System.Diagnostics.Debug.WriteLine("POPA2");
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+               }
+            }
+            if(positionCheck.Count < 3)
+                createList = false;
+            if(createList == false) 
+            {
+                for(int o = 0; o < positionCheck.Count; o++) 
+                {
+                    System.Diagnostics.Debug.Write(positionCheck[o] + " ");
+                }
+                positionCheck.Clear();
+                System.Diagnostics.Debug.WriteLine("DELETE");
+                for(int o = 0; o < positionCheck.Count; o++) 
+                {
+                    System.Diagnostics.Debug.Write(positionCheck[o] + " ");
                 }
             }
         }
