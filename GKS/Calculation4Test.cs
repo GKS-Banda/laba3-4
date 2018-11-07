@@ -200,8 +200,6 @@ namespace GKS
                     }
                 }
             }
-
-            return fourthRelation;
         }
 
         private bool FourthOperationRecursive(int row, int groupNumber, List<string> positionCheck, List<string> first_column)
@@ -374,7 +372,7 @@ namespace GKS
                 }
             }
 
-            foreach (int[][] arr in fifthRelation)
+            /*foreach (int[][] arr in fifthRelation)
             {
                 foreach (int[] i in arr)
                 {
@@ -384,9 +382,8 @@ namespace GKS
                 }
                 System.Diagnostics.Debug.WriteLine("");
                 System.Diagnostics.Debug.WriteLine("-------------");
-            }
+            }*/
 
-            return fifthRelation;
         }
 
         private void FindLine(int column, int groupNumber, List<string> positionCheck)
