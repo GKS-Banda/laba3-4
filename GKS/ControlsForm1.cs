@@ -297,7 +297,7 @@ namespace GKS
                         cf5.ChangeState();
                         cf5 = null;
                     }
-                    cf4.ClearAndStart(cf3changeState, relationMatrix);
+                    cf4.ClearAndStart(mainArray, cf3changeState, relationMatrix);
                     //State4();
                     formState = 4;
                     break;

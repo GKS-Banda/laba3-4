@@ -24,9 +24,9 @@ namespace GKS
             this.newGroupList = newGroupList;
         }
 
-        public void ClearAndStart(string[][] distinctGroups, Dictionary<string, Dictionary<string, int>>[] relationMatrix)
+        public void ClearAndStart(string[][] mainArray, string[][] distinctGroups, Dictionary<string, Dictionary<string, int>>[] relationMatrix)
         {
-            Calculation4Test c4 = new Calculation4Test(distinctGroups, relationMatrix);
+            Calculation4PVBrigada c4 = new Calculation4PVBrigada(mainArray, distinctGroups, relationMatrix);
             c4.StartCalculation(out MGroup);
 
             df4 = new DrawingForm4();
