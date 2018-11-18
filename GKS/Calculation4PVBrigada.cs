@@ -28,20 +28,22 @@ namespace GKS
                 HashSet<int> temp = new HashSet<int>();
                 for (int i = 0; i < mainArray.Length; i++)
                 {
-                    bool addThis = true;
                     if (!checkAll[i])
                     {
+                        bool addThis = true;
                         for (int j = 0; j < mainArray[i].Length; j++)
                         {
                             if (!distinctGroups[k].Contains(mainArray[i][j]))
                                 addThis = false;
                         }
+
+                        if (addThis)
+                        {
+                            checkAll[i] = true;
+                            temp.Add(i);
+                        }
                     }
-                    if(addThis)
-                    {
-                        checkAll[i] = true;
-                        temp.Add(i);
-                    }
+                    
                 }
                 groups.Add(k, temp);
             }
@@ -156,9 +158,6 @@ namespace GKS
             string tempValue = "";
             //string[] stringTemp = Arrays.copyOf(temp.get(value).toArray(), temp.get(value).size(), string[].class);
             string[] stringTemp = temp[value].ToArray().Clone() as string[];  //????
-            System.Diagnostics.Debug.WriteLine("stringTemp 1:");
-            foreach (string s in stringTemp)
-                System.Diagnostics.Debug.WriteLine(s);
             //temp[value].ToArray().CopyTo(stringTemp, temp[value].Count); //???
 
             cycle = new HashSet<string>();
@@ -170,13 +169,10 @@ namespace GKS
                     cycle.Add(stringTemp[i]);
                     tempValue = stringTemp[i];
                     //stringTemp = Arrays.copyOf(temp.get(stringTemp[i]).toArray(), temp.get(value).size(), string[].clas);
-                    string s = stringTemp[i];
-                    stringTemp = new string[temp[s].Count]; //?????
+                    //string s = stringTemp[i];
+                    //stringTemp = new string[temp[s].Count]; //?????
                     //temp[s].ToArray().CopyTo(stringTemp, temp[value].Count); //????
-                    Array.Copy(temp[s].ToArray(), stringTemp, temp[value].Count);
-                    System.Diagnostics.Debug.WriteLine("stringTemp 2:");
-                    foreach (string ss in stringTemp)
-                        System.Diagnostics.Debug.WriteLine(ss);
+                    Array.Copy(temp[stringTemp[i]].ToArray(), stringTemp, temp[value].Count);
                     i = -1;
                     if (cycle.Count >= maxElementsInModule)
                     {
@@ -249,14 +245,23 @@ namespace GKS
                 {
                     if (checkReversibleRelation(currentElement, numberOfGroup) && moveElements(numberOfGroup))
                     {
+                        System.Diagnostics.Debug.WriteLine("first:");
+                        foreach (string s in cycle)
+                            System.Diagnostics.Debug.WriteLine(s);
                         return true;
                     }
                     if (checkNRelation(currentElement, numberOfGroup) && moveElements(numberOfGroup))
                     {
+                        System.Diagnostics.Debug.WriteLine("second:");
+                        foreach (string s in cycle)
+                            System.Diagnostics.Debug.WriteLine(s);
                         return true;
                     }
                     if (checkOneWayRelation(currentElement, numberOfGroup) && moveElements(numberOfGroup))
                     {
+                        System.Diagnostics.Debug.WriteLine("third:");
+                        foreach (string s in cycle)
+                            System.Diagnostics.Debug.WriteLine(s);
                         return true;
                     }
                 }

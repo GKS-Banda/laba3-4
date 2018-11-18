@@ -75,7 +75,7 @@ namespace GKS
             arrowRight.Click += ArrowRight_Click;
             mainPanel.Controls.Add(arrowRight);
 
-            GroupsOutput();
+            //GroupsOutput();
         }
 
         private void GroupCount_Enter(object sender, EventArgs e)
