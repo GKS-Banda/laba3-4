@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GKS
 {
-    class Calculation4Test
+    class Calculation4PVBrigada
     {
         private List<List<string>>[] distinctGroups;
         private Dictionary<string, Dictionary<string, int>>[] relationMatrix;
@@ -19,7 +19,7 @@ namespace GKS
         int first_column = 0;
         bool createList = true;
 
-        public Calculation4Test(string[][] distinctGroups, Dictionary<string, Dictionary<string, int>>[] relationMatrix)
+        public Calculation4PVBrigada(string[][] distinctGroups, Dictionary<string, Dictionary<string, int>>[] relationMatrix)
         {
             this.distinctGroups = new List<List<string>>[distinctGroups.Length];
             for(int i = 0; i < distinctGroups.Length; i++)
