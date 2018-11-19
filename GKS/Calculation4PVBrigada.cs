@@ -61,9 +61,54 @@ namespace GKS
         public void StartCalculation(out string[][][] MGroup)
         {
             process();
-            System.Diagnostics.Debug.WriteLine("cycle:");
-            foreach (string s in cycle)
-                System.Diagnostics.Debug.WriteLine(s);
+            /*System.Diagnostics.Debug.WriteLine("cycle:");
+            foreach (IDictionary <string, ISet<string>> dick in matrixRelationships)
+            {
+                string[] tempKeys = dick.Keys.ToArray();
+                foreach(string s in tempKeys)
+                {
+                    foreach(string ss in dick[s])
+                        System.Diagnostics.Debug.WriteLine(ss);
+                }
+            }*/
+
+            this.MGroup = new string[matrixRelationships.Count][][];
+            for(int i = 0; i < matrixRelationships.Count; i++)
+            {
+                string[] tempKeys = matrixRelationships[i].Keys.ToArray();
+                this.MGroup[i] = new string[tempKeys.Length][];
+                for (int m = 0; m < this.MGroup[i].Length; m++)
+                {
+                    int j = 0;
+                    for (int k = 0; k < tempKeys[m].Length;)
+                    {
+                        string s = tempKeys[m].Substring(k, tempKeys[m].Length - k);
+                        int position = s.IndexOfAny("0123456789".ToCharArray());
+                        while (s.Length > position + 1 && char.IsDigit(s[position + 1])) { position++; }
+
+                        k += position + 1;
+                        j++;
+                    }
+                    this.MGroup[i][m] = new string[j];
+                }
+
+                for (int m = 0; m < this.MGroup[i].Length; m++)
+                {
+                    int j = 0;
+                    for (int k = 0; k < tempKeys[m].Length;)
+                    {
+                        string s = tempKeys[m].Substring(k, tempKeys[m].Length - k);
+                        int position = s.IndexOfAny("0123456789".ToCharArray());
+                        while (s.Length > position + 1 && char.IsDigit(s[position + 1])) { position++; }
+                        this.MGroup[i][m][j] = s.Substring(0, position + 1);
+
+                        j++;
+                        k += position + 1;
+                    }
+                }
+
+            }
+                
             MGroup = this.MGroup;
         }
 
@@ -179,14 +224,11 @@ namespace GKS
                     //numberOfFirstOperation = numberOfFirstOperation +1;
                     string[] tempString = new string[temp[value].Count];
                     int counter;
-                    if (temp[value].Count > stringTemp.Length)
-                        counter = stringTemp.Length;
+                    if (temp[value].Count > temp[stringTemp[i]].ToArray().Length)
+                        counter = temp[stringTemp[i]].ToArray().Length;
                     else
                         counter = temp[value].Count;
-                    for (int m = 0; m < counter; m++)
-                    {
-                        tempString[m] = stringTemp[m];
-                    }
+                    tempString = temp[stringTemp[i]].ToArray().Take(counter).ToArray();
                     stringTemp = tempString;
                     //Array.Copy(temp[stringTemp[i]].ToArray(), stringTemp, temp[value].Count); //сколько 1 операции столько отнять
                     i = -1;
