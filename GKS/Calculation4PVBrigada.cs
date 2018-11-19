@@ -130,6 +130,9 @@ namespace GKS
                 {
                     cycle.Add(element);
                     cycle.Add(value);
+                    /*System.Diagnostics.Debug.WriteLine("СheckReversibleRelation (cycle1): ");
+                    foreach (string s in cycle)
+                        System.Diagnostics.Debug.WriteLine(s);*/
                     return true;
                 }
             }
@@ -172,7 +175,7 @@ namespace GKS
                     //string s = stringTemp[i];
                     //stringTemp = new string[temp[s].Count]; //?????
                     //temp[s].ToArray().CopyTo(stringTemp, temp[value].Count); //????
-                    Array.Copy(temp[stringTemp[i]].ToArray(), stringTemp, temp[value].Count);
+                    Array.Copy(temp[stringTemp[i]].ToArray(), stringTemp, temp[value].Count-1); //сколько 1 операция столько отнять
                     i = -1;
                     if (cycle.Count >= maxElementsInModule)
                     {
