@@ -176,8 +176,14 @@ namespace GKS
                     //stringTemp = new string[temp[s].Count]; //?????
                     //temp[s].ToArray().CopyTo(stringTemp, temp[value].Count); //????
                     System.Diagnostics.Debug.WriteLine("NumberOfFirstOperation: " + numberOfFirstOperation);
-                    numberOfFirstOperation = numberOfFirstOperation +1;
-                    Array.Copy(temp[stringTemp[i]].ToArray(), stringTemp, temp[value].Count-numberOfFirstOperation); //сколько 1 операции столько отнять
+                    //numberOfFirstOperation = numberOfFirstOperation +1;
+                    string[] keys = temp.Keys.ToArray();
+                    for(int m = 0; m < temp.Count; m++)
+                    {
+                        if (temp[keys[m]].Count == 0)
+                            temp.Remove(keys[m]);
+                    }
+                    Array.Copy(temp[stringTemp[i]].ToArray(), stringTemp, temp[value].Count); //сколько 1 операции столько отнять
                     i = -1;
                     if (cycle.Count >= maxElementsInModule)
                     {
