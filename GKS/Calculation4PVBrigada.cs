@@ -177,13 +177,18 @@ namespace GKS
                     //temp[s].ToArray().CopyTo(stringTemp, temp[value].Count); //????
                     System.Diagnostics.Debug.WriteLine("NumberOfFirstOperation: " + numberOfFirstOperation);
                     //numberOfFirstOperation = numberOfFirstOperation +1;
-                    string[] keys = temp.Keys.ToArray();
-                    for(int m = 0; m < temp.Count; m++)
+                    string[] tempString = new string[temp[value].Count];
+                    int counter;
+                    if (temp[value].Count > stringTemp.Length)
+                        counter = stringTemp.Length;
+                    else
+                        counter = temp[value].Count;
+                    for (int m = 0; m < counter; m++)
                     {
-                        if (temp[keys[m]].Count == 0)
-                            temp.Remove(keys[m]);
+                        tempString[m] = stringTemp[m];
                     }
-                    Array.Copy(temp[stringTemp[i]].ToArray(), stringTemp, temp[value].Count); //сколько 1 операции столько отнять
+                    stringTemp = tempString;
+                    //Array.Copy(temp[stringTemp[i]].ToArray(), stringTemp, temp[value].Count); //сколько 1 операции столько отнять
                     i = -1;
                     if (cycle.Count >= maxElementsInModule)
                     {
