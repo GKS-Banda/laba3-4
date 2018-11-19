@@ -12,7 +12,7 @@ namespace GKS
         private string[][] mainArray;
         private Dictionary<string, Dictionary<string, int>>[] relationMatrix;*/
         private string[][][] MGroup;
-
+        private int numberOfFirstOperation = 0;
         private IDictionary<int, ISet<int>> groups;
         private IDictionary<int, string[]> allValues;
         private IList<IDictionary<string, ISet<string>>> matrixRelationships;
@@ -175,7 +175,9 @@ namespace GKS
                     //string s = stringTemp[i];
                     //stringTemp = new string[temp[s].Count]; //?????
                     //temp[s].ToArray().CopyTo(stringTemp, temp[value].Count); //????
-                    Array.Copy(temp[stringTemp[i]].ToArray(), stringTemp, temp[value].Count-1); //сколько 1 операция столько отнять
+                    System.Diagnostics.Debug.WriteLine("NumberOfFirstOperation: " + numberOfFirstOperation);
+                    numberOfFirstOperation = numberOfFirstOperation +1;
+                    Array.Copy(temp[stringTemp[i]].ToArray(), stringTemp, temp[value].Count-numberOfFirstOperation); //сколько 1 операции столько отнять
                     i = -1;
                     if (cycle.Count >= maxElementsInModule)
                     {
@@ -244,25 +246,27 @@ namespace GKS
         {
             for (int numberOfGroup = 0; numberOfGroup < matrixRelationships.Count; ++numberOfGroup)
             {
+                //numberOfFirstOperation = 0;
                 foreach (string currentElement in matrixRelationships[numberOfGroup].Keys) //????
                 {
                     if (checkReversibleRelation(currentElement, numberOfGroup) && moveElements(numberOfGroup))
                     {
-                        System.Diagnostics.Debug.WriteLine("first:");
+                        System.Diagnostics.Debug.WriteLine("First: (group " + (numberOfGroup+1) + ") :" );
                         foreach (string s in cycle)
                             System.Diagnostics.Debug.WriteLine(s);
+                        numberOfFirstOperation += 1;
                         return true;
                     }
                     if (checkNRelation(currentElement, numberOfGroup) && moveElements(numberOfGroup))
                     {
-                        System.Diagnostics.Debug.WriteLine("second:");
+                        System.Diagnostics.Debug.WriteLine("Second: (group " + (numberOfGroup+1) + ") :" );
                         foreach (string s in cycle)
                             System.Diagnostics.Debug.WriteLine(s);
                         return true;
                     }
                     if (checkOneWayRelation(currentElement, numberOfGroup) && moveElements(numberOfGroup))
                     {
-                        System.Diagnostics.Debug.WriteLine("third:");
+                        System.Diagnostics.Debug.WriteLine("Third (group " + (numberOfGroup+1) + ") :" );
                         foreach (string s in cycle)
                             System.Diagnostics.Debug.WriteLine(s);
                         return true;
